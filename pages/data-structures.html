@@ -58,6 +58,8 @@
                         <li><a href="#qualified">Qualified DS</a></li>
                         <li><a href="#likeds">LIKEDS</a></li>
                         <li><a href="#dim">Arrays (DIM)</a></li>
+                        <li><a href="#array-ops">Array Operations (SORTA)</a></li>
+                        <li><a href="#multidim">Multi-dimensional Arrays</a></li>
                         <li><a href="#nested">Nested Structures</a></li>
                         <li><a href="#extname">Externally Described</a></li>
                         <li><a href="#inz">Initialization</a></li>
@@ -229,6 +231,46 @@
                     <div class="box-title">⚠️ 1-Based Indexing</div>
                     <p>RPGLE arrays start at index 1, not 0 like Python. <code>scores(1)</code> is the first element,
                         not <code>scores(0)</code>.</p>
+                </div>
+
+                <h2 id="array-ops">Array Operations (BIFs)</h2>
+                <p>RPGLE provides powerful BIFs and opcodes for array manipulation:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">names</span> <span class="dt">char</span>(<span class="nm">20</span>) <span class="kw">dim</span>(<span class="nm">50</span>);
+<span class="dc">dcl-s</span> <span class="id">pos</span>   <span class="dt">int</span>(<span class="nm">10</span>);
+
+<span class="cm">// 1. SORTA - Sort Array</span>
+<span class="kw">sorta</span> <span class="id">names</span>;
+
+<span class="cm">// 2. %LOOKUP - Search Array</span>
+<span class="id">pos</span> = <span class="bi">%lookup</span>(<span class="st">'ALICE'</span> : <span class="id">names</span>);
+
+<span class="cm">// 3. %ELEM - Get Number of Elements</span>
+<span class="kw">for</span> <span class="id">i</span> = <span class="nm">1</span> <span class="kw">to</span> <span class="bi">%elem</span>(<span class="id">names</span>);
+  <span class="cm">// loop logic</span>
+<span class="kw">endfor</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="multidim">Multi-dimensional Arrays</h2>
+                <p>You can create multi-dimensional arrays by nesting `DIM` in data structures:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// A 10x10 matrix (Grid)</span>
+<span class="dc">dcl-ds</span> <span class="id">grid</span> <span class="kw">qualified</span>;
+  <span class="dc">dcl-ds</span> <span class="id">row</span> <span class="kw">dim</span>(<span class="nm">10</span>);
+    <span class="id">col</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">dim</span>(<span class="nm">10</span>);
+  <span class="dc">end-ds</span>;
+<span class="dc">end-ds</span>;
+
+<span class="id">grid</span>.<span class="id">row</span>(<span class="nm">1</span>).<span class="id">col</span>(<span class="nm">5</span>) = <span class="nm">100</span>;
+<span class="id">grid</span>.<span class="id">row</span>(<span class="nm">2</span>).<span class="id">col</span>(<span class="nm">1</span>) = <span class="nm">200</span>;</pre>
+                    </div>
                 </div>
 
                 <h2 id="nested">Nested Data Structures</h2>
