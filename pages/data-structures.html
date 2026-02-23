@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE Data Structures: DCL-DS, qualified, LIKEDS, DIM arrays, nested structures, and externally described data structures.">
+    <title>Data Structures — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html" class="active">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#basic-ds">Basic Data Structure</a></li>
+                        <li><a href="#qualified">Qualified DS</a></li>
+                        <li><a href="#likeds">LIKEDS</a></li>
+                        <li><a href="#dim">Arrays (DIM)</a></li>
+                        <li><a href="#nested">Nested Structures</a></li>
+                        <li><a href="#extname">Externally Described</a></li>
+                        <li><a href="#inz">Initialization</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Data
+                        Structures</span></div>
+                <h1>Data <span class="gradient-text">Structures</span></h1>
+                <p class="lead">Data structures in RPGLE group related fields together — like Python's
+                    <code>class</code>, <code>dict</code>, or <code>dataclass</code>. They're declared with
+                    <code>dcl-ds</code> and are one of the most powerful features of RPGLE.
+                </p>
+
+                <h2 id="overview">Overview</h2>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">class</span> <span class="fn">Customer</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.name = <span class="st">''</span>
+        self.age = <span class="nm">0</span>
+        self.balance = <span class="nm">0.0</span>
+
+<span class="id">cust</span> = <span class="fn">Customer</span>()
+<span class="id">cust</span>.name = <span class="st">'Alice'</span></pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="dc">dcl-ds</span> <span class="id host">customer</span> <span class="kw host">qualified</span>;
+  <span class="id">name</span>    <span class="dt host">char</span>(<span class="nm">30</span>);
+  <span class="id">age</span>     <span class="dt host">int</span>(<span class="nm">10</span>);
+  <span class="id">balance</span> <span class="dt host">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+<span class="dc">end-ds</span>;
+
+<span class="id">customer</span>.<span class="id">name</span> = <span class="st host">'Alice'</span>;
+<span class="id host">customer</span>.<span class="id">age</span> = <span class="nm">30</span>;
+
+<span class="fn">dsply</span> (<span class="st host">'Name: '</span> + <span class="id">customer</span>.<span class="id">name</span> + <span class="st host">' Age: '</span> + <span class="bi host">%char</span>(<span class="id">customer</span>.<span class="id">age</span>));</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="basic-ds">Basic Data Structure</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Simple DS — fields are standalone in the global namespace</span>
+<span class="dc">dcl-ds</span> <span class="id">address</span>;
+  <span class="id">street</span>  <span class="dt">char</span>(<span class="nm">50</span>);
+  <span class="id">city</span>    <span class="dt">char</span>(<span class="nm">30</span>);
+  <span class="id">state</span>   <span class="dt">char</span>(<span class="nm">2</span>);
+  <span class="id">zipcode</span> <span class="dt">char</span>(<span class="nm">10</span>);
+<span class="dc">end-ds</span>;
+
+<span class="cm">// Access directly (no prefix needed)</span>
+<span class="id">street</span> = <span class="st">'123 Main St'</span>;
+<span class="id">city</span>   = <span class="st">'Springfield'</span>;
+<span class="id">state</span>  = <span class="st">'IL'</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="qualified">Qualified Data Structures <span class="badge badge-blue">Recommended</span></h2>
+                <p>With <code>qualified</code>, subfields are accessed using dot notation — like Python objects. This is
+                    the <strong>recommended</strong> approach to avoid name conflicts.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-ds</span> <span class="id host">employee</span> <span class="kw host">qualified</span>;
+  <span class="id">id</span>      <span class="dt host">int</span>(<span class="nm">10</span>);
+  <span class="id">name</span>    <span class="dt host">char</span>(<span class="nm">50</span>);
+  <span class="id">salary</span>  <span class="dt host">packed</span>(<span class="nm">9</span>:<span class="nm">2</span>);
+<span class="dc">end-ds</span>;
+
+<span class="id">employee</span>.<span class="id">id</span>   = <span class="nm">1001</span>;
+<span class="id">employee</span>.<span class="id host">name</span> = <span class="st host">'Bob Johnson'</span>;
+
+<span class="fn">dsply</span> (<span class="st host">'Emp: '</span> + <span class="bi host">%trim</span>(<span class="id">employee</span>.<span class="id">name</span>) + <span class="st host host">' ('</span> + <span class="bi host">%char</span>(<span class="id host">employee</span>.<span class="id">id</span>) + <span class="st host host host">')'</span>);</pre>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="box-title">✅ Always use QUALIFIED</div>
+                    <p>Without <code>qualified</code>, subfields become global names — which can clash with other
+                        variables. Use <code>qualified</code> to get clean, Python-style <code>object.field</code>
+                        access.</p>
+                </div>
+
+                <h2 id="likeds">LIKEDS — Copy a Structure Layout</h2>
+                <p>Create a new variable with the same layout as an existing DS — like creating another instance of a
+                    Python class:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Define a "template" DS</span>
+<span class="dc">dcl-ds</span> <span class="id">t_product</span> <span class="kw">qualified</span> <span class="kw">template</span>;
+  <span class="id">id</span>    <span class="dt">int</span>(<span class="nm">10</span>);
+  <span class="id">name</span>  <span class="dt">char</span>(<span class="nm">50</span>);
+  <span class="id">price</span> <span class="dt">packed</span>(<span class="nm">9</span>:<span class="nm">2</span>);
+  <span class="id">qty</span>   <span class="dt">int</span>(<span class="nm">10</span>);
+<span class="dc">end-ds</span>;
+
+<span class="cm">// Create instances using LIKEDS</span>
+<span class="dc">dcl-s</span> <span class="id">product1</span> <span class="kw">likeds</span>(<span class="id">t_product</span>);
+<span class="dc">dcl-s</span> <span class="id">product2</span> <span class="kw">likeds</span>(<span class="id">t_product</span>);
+
+<span class="id">product1</span>.<span class="id">name</span>  = <span class="st">'Widget'</span>;
+<span class="id">product1</span>.<span class="id">price</span> = <span class="nm">29.99</span>;
+
+<span class="id">product2</span>.<span class="id">name</span>  = <span class="st">'Gadget'</span>;
+<span class="id">product2</span>.<span class="id">price</span> = <span class="nm">49.99</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box note">
+                    <div class="box-title">📝 TEMPLATE keyword</div>
+                    <p>A <code>template</code> DS doesn't allocate any storage — it's just a blueprint (like a Python
+                        class definition before you create instances). Use it with <code>likeds</code> to create actual
+                        variables.</p>
+                </div>
+
+                <h2 id="dim">Arrays with DIM</h2>
+                <p>Use <code>dim</code> to create arrays — like Python lists but with a fixed size:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Simple array</span>
+<span class="dc">dcl-s</span> <span class="id">scores</span> <span class="dt">packed</span>(<span class="nm">5</span>:<span class="nm">2</span>) <span class="kw">dim</span>(<span class="nm">10</span>);
+
+<span class="id">scores</span>(<span class="nm">1</span>) = <span class="nm">95.50</span>;  <span class="cm">// 1-based indexing!</span>
+<span class="id">scores</span>(<span class="nm">2</span>) = <span class="nm">87.25</span>;
+
+<span class="cm">// Array of data structures</span>
+<span class="dc">dcl-ds</span> <span class="id">employees</span> <span class="kw">qualified</span> <span class="kw">dim</span>(<span class="nm">100</span>);
+  <span class="id">id</span>     <span class="dt">int</span>(<span class="nm">10</span>);
+  <span class="id">name</span>   <span class="dt">char</span>(<span class="nm">50</span>);
+  <span class="id">salary</span> <span class="dt">packed</span>(<span class="nm">9</span>:<span class="nm">2</span>);
+<span class="dc">end-ds</span>;
+
+<span class="id">employees</span>(<span class="nm">1</span>).<span class="id">id</span>     = <span class="nm">1001</span>;
+<span class="id">employees</span>(<span class="nm">1</span>).<span class="id">name</span>   = <span class="st">'Alice'</span>;
+<span class="id">employees</span>(<span class="nm">1</span>).<span class="id">salary</span> = <span class="nm">65000</span>;
+
+<span class="id">employees</span>(<span class="nm">2</span>).<span class="id">id</span>     = <span class="nm">1002</span>;
+<span class="id">employees</span>(<span class="nm">2</span>).<span class="id">name</span>   = <span class="st">'Bob'</span>;
+<span class="id">employees</span>(<span class="nm">2</span>).<span class="id">salary</span> = <span class="nm">72000</span>;
+
+<span class="cm">// Loop through array</span>
+<span class="kw">for</span> <span class="id">i</span> = <span class="nm">1</span> <span class="kw">to</span> <span class="bi">%elem</span>(<span class="id">employees</span>);
+  <span class="kw">if</span> <span class="id">employees</span>(<span class="id">i</span>).<span class="id">id</span> > <span class="nm">0</span>;
+    <span class="fn">dsply</span> <span class="id">employees</span>(<span class="id">i</span>).<span class="id">name</span>;
+  <span class="kw">endif</span>;
+<span class="kw">endfor</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="box-title">⚠️ 1-Based Indexing</div>
+                    <p>RPGLE arrays start at index 1, not 0 like Python. <code>scores(1)</code> is the first element,
+                        not <code>scores(0)</code>.</p>
+                </div>
+
+                <h2 id="nested">Nested Data Structures</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-ds</span> <span class="id">t_address</span> <span class="kw">qualified</span> <span class="kw">template</span>;
+  <span class="id">street</span>  <span class="dt">char</span>(<span class="nm">50</span>);
+  <span class="id">city</span>    <span class="dt">char</span>(<span class="nm">30</span>);
+  <span class="id">state</span>   <span class="dt">char</span>(<span class="nm">2</span>);
+  <span class="id">zip</span>     <span class="dt">char</span>(<span class="nm">10</span>);
+<span class="dc">end-ds</span>;
+
+<span class="dc">dcl-ds</span> <span class="id">customer</span> <span class="kw">qualified</span>;
+  <span class="id">id</span>       <span class="dt">int</span>(<span class="nm">10</span>);
+  <span class="id">name</span>     <span class="dt">char</span>(<span class="nm">50</span>);
+  <span class="id">homeAddr</span> <span class="kw">likeds</span>(<span class="id">t_address</span>);    <span class="cm">// Nested!</span>
+  <span class="id">workAddr</span> <span class="kw">likeds</span>(<span class="id">t_address</span>);    <span class="cm">// Nested!</span>
+<span class="dc">end-ds</span>;
+
+<span class="cm">// Access nested fields with chained dot notation</span>
+<span class="id">customer</span>.<span class="id">name</span> = <span class="st">'Alice'</span>;
+<span class="id">customer</span>.<span class="id">homeAddr</span>.<span class="id">street</span> = <span class="st">'123 Oak Ave'</span>;
+<span class="id">customer</span>.<span class="id">homeAddr</span>.<span class="id">city</span>   = <span class="st">'Portland'</span>;
+<span class="id">customer</span>.<span class="id">workAddr</span>.<span class="id">street</span> = <span class="st">'456 Pine St'</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="extname">Externally Described DS</h2>
+                <p>RPGLE can automatically create a data structure based on a database file's record format — no manual
+                    field definitions needed:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// DS based on a database file (all fields imported)</span>
+<span class="dc">dcl-ds</span> <span class="id">custRec</span> <span class="kw">extname</span>(<span class="st">'CUSTFILE'</span>) <span class="kw">qualified</span>;
+<span class="dc">end-ds</span>;
+
+<span class="cm">// Now custRec has all subfields matching CUSTFILE columns</span>
+<span class="id">custRec</span>.<span class="id">CUSTNM</span> = <span class="st">'New Customer'</span>;
+<span class="id">custRec</span>.<span class="id">CUSTID</span> = <span class="nm">12345</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="inz">Clearing / Initializing a DS</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Reset all subfields to defaults</span>
+<span class="kw">clear</span> <span class="id">customer</span>;
+
+<span class="cm">// Initialize with INZ</span>
+<span class="dc">dcl-ds</span> <span class="id">config</span> <span class="kw">qualified</span> <span class="kw">inz</span>;
+  <span class="id">maxRetries</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">3</span>);
+  <span class="id">timeout</span>    <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">30</span>);
+  <span class="id">debug</span>      <span class="dt">ind</span>     <span class="kw">inz</span>(<span class="sp">*off</span>);
+<span class="dc">end-ds</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Data Structure Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// 1. Qualified & Initialized</span>
+<span class="dc">dcl-ds</span> <span class="id">appConfig</span> <span class="kw">qualified</span> <span class="kw">inz</span>;
+  <span class="id">port</span>    <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">8080</span>);
+  <span class="id">active</span>  <span class="dt host">ind</span>     <span class="kw host">inz</span>(<span class="sp host">*on</span>);
+<span class="dc host host host host">end-ds</span>;
+
+<span class="cm host host host host host host">// 2. Multi-occurrence / Array DS</span>
+<span class="dc host host host host host host host host">dcl-ds</span> <span class="id host host host host host host host host host host">orders</span> <span class="kw host host host host host host host host host host host host">qualified</span> <span class="kw host host host host host host host host host host host host host host">dim</span>(<span class="nm host">50</span>);
+  <span class="id host host host host host host host host host host host host host host host host">id</span>      <span class="dt host host host host host host host host host host host host host host host host host host">int</span>(<span class="nm host">10</span>);
+  <span class="id host host host host host host host host host host host host host host host host host host host host">total</span>   <span class="dt host host host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">11</span>:<span class="nm host">2</span>);
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host host host">end-ds</span>;
+
+<span class="cm host host host host host host host host host host host host host host host host host host host host host host host host host host">// 3. Data Structure Template</span>
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dcl-ds</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">t_user</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">qualified</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">template</span>;
+  <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">handle</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">varchar</span>(<span class="nm host">20</span>);
+  <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">email</span>   <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">varchar</span>(<span class="nm">100</span>);
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">end-ds</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="built-in-functions.html" class="chapter-link prev"><span class="label">←
+                            Previous</span><span class="title">Built-in Functions</span></a>
+                    <a href="file-operations.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">File I/O</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

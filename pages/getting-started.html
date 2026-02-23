@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Learn RPGLE history, free vs fixed format, write your first program, and understand the compilation process on IBM i.">
+    <title>Getting Started — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html" class="active">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#what-is-rpgle">What is RPGLE?</a></li>
+                        <li><a href="#history">History & Evolution</a></li>
+                        <li><a href="#free-vs-fixed">Free vs Fixed Format</a></li>
+                        <li><a href="#first-program">Your First Program</a></li>
+                        <li><a href="#program-structure">Program Structure</a></li>
+                        <li><a href="#compilation">Compilation Process</a></li>
+                        <li><a href="#control-options">Control Options</a></li>
+                    </ul>
+                </div>
+            </aside>
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Getting
+                        Started</span></div>
+                <h1>Getting Started with <span class="gradient-text">RPGLE Free Format</span></h1>
+                <p class="lead">Welcome to RPGLE — a powerful business-oriented programming language that has been the
+                    backbone of IBM i (AS/400) systems for decades. In this chapter, you'll learn what RPGLE is, how it
+                    evolved, and write your very first free format program.</p>
+
+                <h2 id="what-is-rpgle">What is RPGLE?</h2>
+                <p><strong>RPGLE</strong> (Report Program Generator IV — Extended) is a high-level language used
+                    primarily on <strong>IBM i</strong> (AS/400 / iSeries). It excels at:</p>
+                <ul>
+                    <li>Processing large volumes of transactional data</li>
+                    <li>Working with DB2 databases natively</li>
+                    <li>Building backend business logic and batch processing</li>
+                    <li>Interfacing with modern technologies via APIs</li>
+                </ul>
+                <div class="info-box note">
+                    <div class="box-title">💡 Think of it this way</div>
+                    <p>If Python is the versatile "Swiss army knife," RPGLE is the "precision engine" tuned for
+                        enterprise business operations on IBM i.</p>
+                </div>
+
+                <h2 id="history">History & Evolution</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Era</th>
+                            <th>Version</th>
+                            <th>Key Changes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1960s</td>
+                            <td>RPG I & II</td>
+                            <td>Punch card–based report generator, column-dependent</td>
+                        </tr>
+                        <tr>
+                            <td>1970s–80s</td>
+                            <td>RPG III</td>
+                            <td>System/38, structured programming concepts</td>
+                        </tr>
+                        <tr>
+                            <td>1994</td>
+                            <td>RPG IV (RPGLE)</td>
+                            <td>Major modernization: longer names, expressions, subprocedures</td>
+                        </tr>
+                        <tr>
+                            <td>2001</td>
+                            <td>Free-format calcs</td>
+                            <td>Calculations freed from columns via /free and /end-free</td>
+                        </tr>
+                        <tr>
+                            <td>2013</td>
+                            <td><strong>Full Free (V7R1)</strong></td>
+                            <td>All specs free format. No column rules at all!</td>
+                        </tr>
+                        <tr>
+                            <td>2019+</td>
+                            <td>Ongoing</td>
+                            <td>New BIFs, data types, open access, ILE improvements</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="free-vs-fixed">Free Format vs Fixed Format</h2>
+                <p>In <strong>fixed format</strong>, code must be placed in specific columns. In <strong>free
+                        format</strong>, you write code like any modern language.</p>
+                <h3>Fixed Format (Old Way)</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPG IV — Fixed Format</span><button
+                            class="copy-btn">📋 Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">     H DFTACTGRP(*NO)</span>
+<span class="cm">     D myName          S             20A   INZ('Hello')</span>
+<span class="cm">     D myAge           S              3P 0 INZ(25)</span>
+<span class="cm">     C                   IF        myAge >= 18</span>
+<span class="cm">     C     myName        DSPLY</span>
+<span class="cm">     C                   ENDIF</span>
+<span class="cm">     C                   EVAL      *INLR = *ON</span></pre>
+                    </div>
+                </div>
+                <div class="info-box warning">
+                    <div class="box-title">⚠️ Column Dependency</div>
+                    <p>Putting code in wrong columns causes compilation errors. Very error-prone and hard to read.</p>
+                </div>
+
+                <h3>Free Format (Modern Way)</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Full Free Format</span><button
+                            class="copy-btn">📋 Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">ctl-opt</span> <span class="kw">dftactgrp</span>(<span class="sp">*no</span>);
+
+<span class="dc">dcl-s</span> <span class="id">myName</span> <span class="dt">char</span>(<span class="nm">20</span>) <span class="kw">inz</span>(<span class="st">'Hello'</span>);
+<span class="dc">dcl-s</span> <span class="id">myAge</span>  <span class="dt">packed</span>(<span class="nm">3</span>:<span class="nm">0</span>) <span class="kw">inz</span>(<span class="nm">25</span>);
+
+<span class="kw">if</span> <span class="id">myAge</span> >= <span class="nm">18</span>;
+  <span class="fn">dsply</span> (<span class="id">myName</span> + <span class="st">' (Age: '</span> + <span class="bi">%char</span>(<span class="id">myAge</span>) + <span class="st">')'</span>);
+<span class="kw">endif</span>;
+
+*<span class="sp">inlr</span> = <span class="sp">*on</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box tip">
+                    <div class="box-title">✅ Advantage</div>
+                    <p>Free format is easier to read, write, and maintain. This entire tutorial uses full free format
+                        exclusively.</p>
+                </div>
+
+                <h2 id="first-program">Your First RPGLE Program Patterns</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-filename">HELLO_GALLERY.RPGLE</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// Pattern 1: Minimal Hello World</span>
+<span class="fn">dsply</span> <span class="st">'Hello World!'</span>;
+
+<span class="cm host host">// Pattern 2: Hello with Variables</span>
+<span class="dc host host host host">dcl-s</span> <span class="id host host host host host host">msg</span> <span class="dt host host host host host host host host">varchar</span>(<span class="nm host host host host host host">50</span>) <span class="kw host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host">'Welcome!'</span>);
+<span class="fn host host host host host host host host host host host host host host">dsply</span> <span class="id host host host host host host host host host host host host host host host host">msg</span>;
+
+<span class="cm host host host host host host host host host host host host host host host host host host">// Pattern 3: Simple Input/Output</span>
+<span class="dc host host host host host host host host host host host host host host host host host host host host">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host">name</span> <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host">10</span>);
+<span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'What is your name?'</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">' '</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">name</span>;
+<span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> (<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'Hello '</span> + <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">name</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+        </div>
+        </div>
+        <h3>Line-by-Line Explanation</h3>
+        <ul>
+            <li><code>**free</code> — Tells the compiler this source is entirely free format.</li>
+            <li><code>dsply</code> — Displays a message on the screen.</li>
+            <li><code>return</code> — Ends the program execution.</li>
+        </ul>
+
+        <h2 id="program-structure">RPGLE Program Structure</h2>
+        <p>A typical program follows this order:</p>
+        <ol>
+            <li><strong>ctl-opt</strong> — Control options (compiler directives)</li>
+            <li><strong>dcl-f</strong> — File declarations</li>
+            <li><strong>dcl-s / dcl-c / dcl-ds</strong> — Global variables, constants, data structures</li>
+            <li><strong>dcl-pr</strong> — Prototype declarations</li>
+            <li><strong>Main logic</strong> — Executable code or main procedure</li>
+            <li><strong>dcl-proc / end-proc</strong> — Sub-procedures</li>
+        </ol>
+
+        <h2 id="compilation">Compilation Process</h2>
+        <div class="code-block">
+            <div class="code-header"><span class="code-lang">CL Command — Simple</span><button class="copy-btn">📋
+                    Copy</button></div>
+            <div class="code-content">
+                <pre><span class="cm">// Compile a bound RPG program (one step)</span>
+<span class="kw">CRTBNDRPG</span> PGM(MYLIB/HELLO) SRCFILE(MYLIB/QRPGLESRC) SRCMBR(HELLO)
+
+<span class="cm">// Run it</span>
+<span class="kw">CALL</span> MYLIB/HELLO</pre>
+            </div>
+        </div>
+
+        <h2 id="control-options">Control Options (CTL-OPT)</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Purpose</th>
+                    <th>Common Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>dftactgrp</code></td>
+                    <td>Use default activation group?</td>
+                    <td><code>*no</code> (always for modern code)</td>
+                </tr>
+                <tr>
+                    <td><code>actgrp</code></td>
+                    <td>Activation group name</td>
+                    <td><code>*caller</code>, <code>*new</code></td>
+                </tr>
+                <tr>
+                    <td><code>main</code></td>
+                    <td>Linear main procedure</td>
+                    <td>Procedure name</td>
+                </tr>
+                <tr>
+                    <td><code>option</code></td>
+                    <td>Compiler options</td>
+                    <td><code>*srcstmt</code>, <code>*nodebugio</code></td>
+                </tr>
+                <tr>
+                    <td><code>datfmt</code></td>
+                    <td>Default date format</td>
+                    <td><code>*iso</code>, <code>*usa</code>, <code>*eur</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="chapter-nav">
+            <a href="../index.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                    class="title">Home</span></a>
+            <a href="data-types.html" class="chapter-link next"><span class="label">Next →</span><span
+                    class="title">Data Types</span></a>
+        </div>
+        </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

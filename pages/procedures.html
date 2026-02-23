@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE procedures and subprocedures: DCL-PROC, DCL-PI, DCL-PR, parameters, return values, local variables, and modular programming.">
+    <title>Procedures — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html" class="active">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#dcl-proc">DCL-PROC Basics</a></li>
+                        <li><a href="#parameters">Parameters (DCL-PI)</a></li>
+                        <li><a href="#return">Return Values</a></li>
+                        <li><a href="#prototypes">Prototypes (DCL-PR)</a></li>
+                        <li><a href="#const">CONST Keyword</a></li>
+                        <li><a href="#local">Local Variables</a></li>
+                        <li><a href="#export">EXPORT Keyword</a></li>
+                        <li><a href="#complete">Complete Example</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span
+                        class="sep">›</span><span>Procedures</span></div>
+                <h1>Procedures & <span class="gradient-text">Subprocedures</span></h1>
+                <p class="lead">Procedures in RPGLE are like Python functions — reusable blocks of code that accept
+                    parameters and return values. They are the foundation of modular, maintainable RPG programs.</p>
+
+                <h2 id="overview">Overview</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>RPGLE Keyword</th>
+                            <th>Purpose</th>
+                            <th>Python Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>dcl-proc</code></td>
+                            <td>Define a procedure</td>
+                            <td><code>def function_name():</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>dcl-pi</code></td>
+                            <td>Procedure interface (parameters)</td>
+                            <td>Function parameters</td>
+                        </tr>
+                        <tr>
+                            <td><code>dcl-pr</code></td>
+                            <td>Prototype (forward declaration)</td>
+                            <td>N/A (not needed in Python)</td>
+                        </tr>
+                        <tr>
+                            <td><code>return</code></td>
+                            <td>Return a value</td>
+                            <td><code>return</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>end-proc</code></td>
+                            <td>End procedure</td>
+                            <td>Indentation ends</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="dcl-proc">Basic Procedure (No Parameters)</h2>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">def</span> <span class="fn">sayHello</span>():
+    <span class="fn">print</span>(<span class="st">'Hello!'</span>)
+
+<span class="fn">sayHello</span>()</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="dc">dcl-proc</span> <span class="fn">sayHello</span>;
+  <span class="fn">dsply</span> <span class="st">'Hello from RPGLE!'</span>;
+<span class="dc">end-proc</span>;
+
+<span class="fn">sayHello</span>();</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="parameters">Parameters with DCL-PI</h2>
+                <p><code>dcl-pi</code> (Procedure Interface) defines the parameters a procedure accepts and its return
+                    type:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-proc</span> <span class="fn">greetUser</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span>;
+    <span class="id">userName</span> <span class="dt">char</span>(<span class="nm">30</span>) <span class="kw">const</span>;
+    <span class="id">age</span>      <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+
+  <span class="fn">dsply</span> (<span class="st">'Hello '</span> + <span class="bi">%trim</span>(<span class="id">userName</span>) + <span class="st">' (Age: '</span> + <span class="bi">%char</span>(<span class="id">age</span>) + <span class="st">')'</span>);
+<span class="dc">end-proc</span>;
+
+<span class="fn">greetUser</span>(<span class="st">'Alice'</span> : <span class="nm">30</span>);</pre>
+                    </div>
+                </div>
+
+                <div class="info-box note">
+                    <div class="box-title">📝 Parameters are separated by colons</div>
+                    <p>In RPGLE, function arguments are separated by <code>:</code> (colon), not <code>,</code> (comma)
+                        like in Python. So <code>greetUser('Alice' : 30)</code> not <code>greetUser('Alice', 30)</code>.
+                    </p>
+                </div>
+
+                <h2 id="return">Return Values</h2>
+                <p>Specify the return type on the <code>dcl-pi</code> line:</p>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="id">result</span> = <span class="fn">add</span>(<span class="nm">10</span>, <span class="nm">20</span>)</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="dc">dcl-proc</span> <span class="fn">add</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+    <span class="id">a</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+    <span class="id">b</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+  <span class="kw">return</span> <span class="id">a</span> + <span class="id">b</span>;
+<span class="dc">end-proc</span>;
+
+<span class="fn">dsply</span> (<span class="st">'10 + 20 = '</span> + <span class="bi">%char</span>(<span class="fn">add</span>(<span class="nm">10</span> : <span class="nm">20</span>)));</pre>
+                        </div>
+                    </div>
+                </div>
+                <p>The return type (<code>packed(11:2)</code>) is placed right after <code>dcl-pi *n</code>. If the
+                    procedure returns nothing (a "void" function), omit the return type.</p>
+
+                <h2 id="prototypes">Prototypes (DCL-PR)</h2>
+                <p>If a procedure is called <strong>before</strong> it's defined, you need a prototype (forward
+                    declaration). This is not needed in Python but required in RPGLE like C's function prototypes.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">ctl-opt</span> <span class="kw">dftactgrp</span>(<span class="sp">*no</span>) <span class="kw">main</span>(<span class="fn">main</span>);
+
+<span class="cm">// Prototype — declare BEFORE calling</span>
+<span class="dc">dcl-pr</span> <span class="fn">calcTax</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+  <span class="id">amount</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="id">rate</span>   <span class="dt">packed</span>(<span class="nm">5</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+<span class="dc">end-pr</span>;
+
+<span class="dc">dcl-proc</span> <span class="fn">main</span>;
+  <span class="dc">dcl-s</span> <span class="id">tax</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+  <span class="id">tax</span> = <span class="fn">calcTax</span>(<span class="nm">1000</span> : <span class="nm">18</span>);  <span class="cm">// Works because of prototype</span>
+  <span class="fn">dsply</span> <span class="bi">%char</span>(<span class="id">tax</span>);
+<span class="dc">end-proc</span>;
+
+<span class="cm">// Implementation — defined AFTER call</span>
+<span class="dc">dcl-proc</span> <span class="fn">calcTax</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+    <span class="id">amount</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+    <span class="id">rate</span>   <span class="dt">packed</span>(<span class="nm">5</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+  <span class="kw">return</span> <span class="id">amount</span> * <span class="id">rate</span> / <span class="nm">100</span>;
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="const">The CONST Keyword</h2>
+                <p>By default, RPGLE passes parameters <strong>by reference</strong> (the procedure can modify the
+                    caller's variable). Use <code>const</code> to pass by read-only reference (like Python's default
+                    behavior for immutable types):</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// CONST = read-only. Can pass literals and expressions.</span>
+<span class="dc">dcl-proc</span> <span class="fn">double</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">int</span>(<span class="nm">10</span>);
+    <span class="id">value</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">const</span>;   <span class="cm">// Read-only</span>
+  <span class="dc">end-pi</span>;
+  <span class="kw">return</span> <span class="id">value</span> * <span class="nm">2</span>;
+<span class="dc">end-proc</span>;
+
+<span class="id">result</span> = <span class="fn">double</span>(<span class="nm">25</span>);  <span class="cm">// OK - can pass a literal</span>
+
+<span class="cm">// Without CONST — must pass a variable</span>
+<span class="dc">dcl-proc</span> <span class="fn">increment</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span>;
+    <span class="id">value</span> <span class="dt">int</span>(<span class="nm">10</span>);           <span class="cm">// By reference — can modify!</span>
+  <span class="dc">end-pi</span>;
+  <span class="id">value</span> += <span class="nm">1</span>;               <span class="cm">// Modifies the caller's variable</span>
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="local">Local Variables</h2>
+                <p>Variables declared inside a procedure are local — just like in Python functions:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-proc</span> <span class="fn">calculateArea</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+    <span class="id">length</span> <span class="dt">packed</span>(<span class="nm">7</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+    <span class="id">width</span>  <span class="dt">packed</span>(<span class="nm">7</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+
+  <span class="cm">// Local variables — only visible in this procedure</span>
+  <span class="dc">dcl-s</span> <span class="id">area</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+
+  <span class="id">area</span> = <span class="id">length</span> * <span class="id">width</span>;
+  <span class="kw">return</span> <span class="id">area</span>;
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="export">EXPORT Keyword</h2>
+                <p>By default, procedures are local to the module. Use <code>export</code> to make them available to
+                    other programs/modules (like Python's public functions in a module):</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Visible to other modules that bind to this one</span>
+<span class="dc">dcl-proc</span> <span class="fn">getDiscount</span> <span class="kw">export</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">5</span>:<span class="nm">2</span>);
+    <span class="id">customerType</span> <span class="dt">char</span>(<span class="nm">10</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+
+  <span class="kw">select</span>;
+    <span class="kw">when</span> <span class="id">customerType</span> = <span class="st">'VIP'</span>;
+      <span class="kw">return</span> <span class="nm">20.00</span>;
+    <span class="kw">when</span> <span class="id">customerType</span> = <span class="st">'REGULAR'</span>;
+      <span class="kw">return</span> <span class="nm">5.00</span>;
+    <span class="kw">other</span>;
+      <span class="kw">return</span> <span class="nm">0</span>;
+  <span class="kw">endsl</span>;
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Procedures Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// 1. No Parameters / No Return</span>
+<span class="dc">dcl-proc</span> <span class="fn">logAppStart</span>;
+  <span class="cm host host">// Logic</span>
+<span class="dc host host host host">end-proc</span>;
+
+<span class="cm host host host host host host">// 2. Parameters + Return Value</span>
+<span class="dc host host host host host host host host">dcl-proc</span> <span class="fn">calculateDiscount</span>;
+  <span class="dc host host host host host host host host host host">dcl-pi</span> *<span class="sp host host host host host host host host host host host host">n</span> <span class="dt host host host host host host host host host host host host host host">packed</span>(<span class="nm host">5</span>:<span class="nm host">2</span>);
+    <span class="id host host host host host host host host host host host host host host host host">total</span> <span class="dt host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">7</span>:<span class="nm host">2</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host">const</span>;
+  <span class="dc host host host host host host host host host host host host host host host host host host host host host host">end-pi</span>;
+  <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host">return</span> <span class="id host host host host host host host host host host host host host host host_host host_host host_host host_host host_host">total</span> * <span class="nm host">0.10</span>;
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host host host host host host host">end-proc</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="complete">Complete Example</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-filename">ORDERUTIL.RPGLE</span><button
+                            class="copy-btn">📋 Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">ctl-opt</span> <span class="kw">dftactgrp</span>(<span class="sp">*no</span>) <span class="kw">main</span>(<span class="fn">main</span>);
+
+<span class="cm">// Constants</span>
+<span class="dc">dcl-c</span> <span class="id">TAX_RATE</span> <span class="nm">0.18</span>;
+
+<span class="cm">// Prototypes</span>
+<span class="dc">dcl-pr</span> <span class="fn">calcSubtotal</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+  <span class="id">price</span> <span class="dt">packed</span>(<span class="nm">7</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="id">qty</span>   <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">const</span>;
+<span class="dc">end-pr</span>;
+
+<span class="dc">dcl-pr</span> <span class="fn">calcTotal</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+  <span class="id">subtotal</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+<span class="dc">end-pr</span>;
+
+<span class="cm">// Main procedure</span>
+<span class="dc">dcl-proc</span> <span class="fn">main</span>;
+  <span class="dc">dcl-s</span> <span class="id">sub</span>   <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+  <span class="dc">dcl-s</span> <span class="id">total</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+
+  <span class="id">sub</span>   = <span class="fn">calcSubtotal</span>(<span class="nm">29.99</span> : <span class="nm">3</span>);
+  <span class="id">total</span> = <span class="fn">calcTotal</span>(<span class="id">sub</span>);
+
+  <span class="fn">dsply</span> (<span class="st">'Total: '</span> + <span class="bi">%char</span>(<span class="id">total</span>));
+<span class="dc">end-proc</span>;
+
+<span class="cm">// Subprocedures</span>
+<span class="dc">dcl-proc</span> <span class="fn">calcSubtotal</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+    <span class="id">price</span> <span class="dt">packed</span>(<span class="nm">7</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+    <span class="id">qty</span>   <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+  <span class="kw">return</span> <span class="id">price</span> * <span class="id">qty</span>;
+<span class="dc">end-proc</span>;
+
+<span class="dc">dcl-proc</span> <span class="fn">calcTotal</span>;
+  <span class="dc">dcl-pi</span> *<span class="sp">n</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+    <span class="id">subtotal</span> <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>) <span class="kw">const</span>;
+  <span class="dc">end-pi</span>;
+  <span class="kw">return</span> <span class="id">subtotal</span> + (<span class="id">subtotal</span> * <span class="id">TAX_RATE</span>);
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="control-structures.html" class="chapter-link prev"><span class="label">←
+                            Previous</span><span class="title">Control Structures</span></a>
+                    <a href="built-in-functions.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Built-in Functions</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

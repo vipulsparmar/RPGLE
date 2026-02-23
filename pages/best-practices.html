@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE Best Practices: Coding standards, naming conventions, performance tips, and modernizing legacy RPG code.">
+    <title>Best Practices — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#modernization">Modernization</a></li>
+                        <li><a href="#naming">Naming Conventions</a></li>
+                        <li><a href="#modular">Modular Design</a></li>
+                        <li><a href="#performance">Performance Tips</a></li>
+                        <li><a href="#error-handling">Error Handling</a></li>
+                        <li><a href="#comments">Documentation</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Best
+                        Practices</span></div>
+                <h1>Best <span class="gradient-text">Practices</span></h1>
+                <p class="lead">Writing modern RPGLE isn't just about using free format — it's about adopting
+                    professional software engineering standards. Follow these principles to write clean, maintainable,
+                    and efficient code.</p>
+
+                <h2 id="modernization">1. Embrace Full Free Format</h2>
+                <p>Adopt <code>**free</code> on the first line of every source member. Avoid mixing fixed and free
+                    format whenever possible. It's the standard for IBM i modernization.</p>
+                <div class="info-box tip">
+                    <div class="box-title">✅ No column limits</div>
+                    <p>With <code>**free</code>, you can use any column from 1 to 200+ (depending on your editor
+                        settings). Don't restrict yourself to columns 7-80 anymore!</p>
+                </div>
+
+                <h2 id="naming">2. Use Meaningful Naming</h2>
+                <p>RPGLE supports names up to 4096 characters. Stop using 6-character legacy names (e.g.,
+                    <code>CUSTNM</code>). Use <strong>camelCase</strong> or <strong>PascalCase</strong> for readability
+                    — just like Python or Java.
+                </p>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Legacy (Bad)</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">dcl-s</span> <span class="id">CSTADR</span> <span class="dt">char</span>(<span class="nm">50</span>);
+<span class="dc">dcl-s</span> <span class="id">WBAL</span>   <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Modern (Good)</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">dcl-s</span> <span class="id">customerAddress</span> <span class="dt">char</span>(<span class="nm">50</span>);
+<span class="dc">dcl-s</span> <span class="id">workingBalance</span>  <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="modular">3. Modular Design</h2>
+                <ul>
+                    <li><strong>Avoid Global Variables:</strong> Pass data into procedures via parameters.</li>
+                    <li><strong>Encapsulate Logic:</strong> One procedure should do exactly one thing.</li>
+                    <li><strong>Use Service Programs:</strong> Group related procedures into service programs (*SRVPGM)
+                        for reuse across multiple applications.</li>
+                </ul>
+
+                <h2 id="performance">4. Performance Tips</h2>
+                <ul>
+                    <li><strong>Varchar for Web/SQL:</strong> Use <code>varchar</code> instead of <code>char</code> when
+                        building strings or working with web services to avoid constant <code>%trim()</code> calls.</li>
+                    <li><strong>BIFs vs OpCodes:</strong> Prefer BIFs (like <code>%scan</code>, <code>%subst</code>)
+                        over legacy operation codes.</li>
+                    <li><strong>Index correctly:</strong> Ensure your files have logical views or SQL indexes that match
+                        your <code>setll</code> and <code>reade</code> operations.</li>
+                </ul>
+
+                <h2 id="error-handling">5. Modern Error Handling</h2>
+                <p>Use <code>monitor</code> blocks for structured error handling instead of legacy "(E)" indicators or
+                    <code>*PSSR</code>.
+                </p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                    <div class="code-content">
+                        <pre><span class="kw">monitor</span>;
+  <span class="id">result</span> = <span class="id">value1</span> / <span class="id">value2</span>;
+<span class="kw">on-error</span> <span class="nm">00102</span>; <span class="cm">// Divide by zero</span>
+  <span class="id">result</span> = <span class="nm">0</span>;
+<span class="kw">on-error</span>;
+  <span class="fn">logError</span>(<span class="st">'Unexpected error'</span>);
+<span class="kw">endmon</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="comments">6. Self-Documenting Code</h2>
+                <p>Use <code>//</code> for comments. Add a header block to your procedures explaining the purpose,
+                    parameters, and return values.</p>
+                <div class="info-box note">
+                    <div class="box-title">📝 Pro Tip</div>
+                    <p>Write your code so that the logic is clear from the variable and procedure names. Comments should
+                        explain <em>why</em> you're doing something, not <em>what</em> you're doing (the code already
+                        tells us what).</p>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="file-operations.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">File I/O</span></a>
+                    <a href="../index.html" class="chapter-link next"><span class="label">Course Finished 🎉</span><span
+                            class="title">Back to Home</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

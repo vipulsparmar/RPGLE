@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Essential RPGLE Built-in Functions (BIFs): %TRIM, %SCAN, %SUBST, %CHAR, %DEC, %DATE, %ELEM, %LOOKUP, %REPLACE, and more.">
+    <title>Built-in Functions — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html" class="active">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#string-bifs">String BIFs</a></li>
+                        <li><a href="#numeric-bifs">Numeric BIFs</a></li>
+                        <li><a href="#conversion-bifs">Conversion BIFs</a></li>
+                        <li><a href="#date-bifs">Date/Time BIFs</a></li>
+                        <li><a href="#array-bifs">Array BIFs</a></li>
+                        <li><a href="#other-bifs">Other BIFs</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Built-in
+                        Functions</span></div>
+                <h1>Built-in Functions <span class="gradient-text">(BIFs)</span></h1>
+                <p class="lead">BIFs are RPGLE's built-in functions — they all start with <code>%</code>. Think of them
+                    like Python's built-in functions (<code>len()</code>, <code>str()</code>, <code>int()</code>) but
+                    prefixed with a percent sign.</p>
+
+                <h2 id="overview">Quick Reference</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>BIF</th>
+                            <th>Purpose</th>
+                            <th>Python Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>%trim</code></td>
+                            <td>Remove leading/trailing blanks</td>
+                            <td><code>str.strip()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%scan</code></td>
+                            <td>Find substring position</td>
+                            <td><code>str.find()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%subst</code></td>
+                            <td>Extract substring</td>
+                            <td><code>str[start:end]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%replace</code></td>
+                            <td>Replace part of string</td>
+                            <td><code>str.replace()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%len</code></td>
+                            <td>Get length</td>
+                            <td><code>len()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%char</code></td>
+                            <td>Convert to character</td>
+                            <td><code>str()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%dec</code></td>
+                            <td>Convert to decimal</td>
+                            <td><code>float() / Decimal()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%int</code></td>
+                            <td>Convert to integer</td>
+                            <td><code>int()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%date</code></td>
+                            <td>Convert/get date</td>
+                            <td><code>datetime.date()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%elem</code></td>
+                            <td>Number of array elements</td>
+                            <td><code>len(list)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%lookup</code></td>
+                            <td>Search array</td>
+                            <td><code>list.index()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="string-bifs">String BIFs</h2>
+
+                <h3>%TRIM / %TRIML / %TRIMR</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">clean</span> = <span class="bi">%trim</span>(<span class="id host host">data</span>);      <span class="cm host host host host">// Remove both ends</span>
+<span class="id host host host host host host">left</span>  = <span class="bi">%triml</span>(<span class="id host host host host host host host host">data</span>);     <span class="cm host host host host host host host host host host">// Remove leading</span>
+<span class="id host host host host host host host host host host host host">right</span> = <span class="bi">%trimr</span>(<span class="id host host host host host host host host host host host host host host">data</span>);     <span class="cm host host host host host host host host host host host host host host host host">// Remove trailing</span>
+<span class="id host host host host host host host host host host host host host host host host host host">strip</span> = <span class="bi">%trim</span>(<span class="id host host host host host host host host host host host host host host host host host host host host">data</span> : <span class="st host host host host host host host host host host host host host host host host host host host host host host">'-'</span>); <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host">// Remove specific char</span>
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h3>%SCAN — Find Substring</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">text</span> <span class="dt">varchar</span>(<span class="nm">50</span>) <span class="kw">inz</span>(<span class="st">'Hello World'</span>);
+<span class="dc">dcl-s</span> <span class="id">pos</span>  <span class="dt">int</span>(<span class="nm">10</span>);
+
+<span class="id">pos</span> = <span class="bi">%scan</span>(<span class="st">'World'</span>:<span class="id">text</span>);
+<span class="fn">dsply</span> (<span class="st host">'Pos: '</span> + <span class="bi">%char</span>(<span class="id">pos</span>));</pre>
+                        <span class="id">pos</span> = <span class="bi">%scan</span>(<span class="st">'xyz'</span>:<span
+                            class="id">text</span>); <span class="cm">// 0 (not found)</span>
+                        <span class="id">pos</span> = <span class="bi">%scan</span>(<span class="st">'l'</span>:<span
+                            class="id">text</span>:<span class="nm">5</span>); <span class="cm">// 10 (start search at
+                            pos 5)</span>
+
+                        <span class="cm">// Python: text.find('World') → 6 (0-based)</span></pre>
+                    </div>
+                </div>
+
+                <h3>%SUBST — Extract Substring</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">text</span> <span class="dt">varchar</span>(<span class="nm">50</span>) <span class="kw">inz</span>(<span class="st">'Hello World'</span>);
+
+<span class="bi">%subst</span>(<span class="id">text</span>:<span class="nm">1</span>:<span class="nm">5</span>)    <span class="cm">// 'Hello'  (start:length)</span>
+<span class="bi">%subst</span>(<span class="id">text</span>:<span class="nm">7</span>)       <span class="cm">// 'World'  (start to end)</span>
+
+<span class="cm">// Python: text[0:5]  → 'Hello'  (start:end, 0-based)</span>
+<span class="cm">// Note: RPGLE uses start:length, Python uses start:end</span></pre>
+                    </div>
+                </div>
+
+                <h3>%REPLACE — Replace in String</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">text</span> <span class="dt">varchar</span>(<span class="nm">50</span>) <span class="kw">inz</span>(<span class="st">'Hello World'</span>);
+
+<span class="cm">// %replace(replacement : source : start : length)</span>
+<span class="id">text</span> = <span class="bi">%replace</span>(<span class="st">'RPGLE'</span>:<span class="id">text</span>:<span class="nm">7</span>:<span class="nm">5</span>);
+<span class="cm">// Result: 'Hello RPGLE'</span></pre>
+                    </div>
+                </div>
+
+                <h3>%LEN — Get/Set Length</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">text</span> <span class="dt">varchar</span>(<span class="nm">100</span>) <span class="kw">inz</span>(<span class="st">'Hello'</span>);
+
+<span class="bi">%len</span>(<span class="id">text</span>)     <span class="cm">// 5 (current length for varchar)</span>
+
+<span class="cm">// Truncate a varchar</span>
+<span class="bi">%len</span>(<span class="id">text</span>) = <span class="nm">3</span>;  <span class="cm">// text is now 'Hel'</span></pre>
+                    </div>
+                </div>
+
+                <h2 id="numeric-bifs">Numeric BIFs</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Numeric Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">val</span> = <span class="bi">%abs</span>(<span class="id host host">input</span>);        <span class="cm host host host host">// Absolute</span>
+<span class="id host host host host host host">rem</span> = <span class="bi">%rem</span>(<span class="id host host host host host host host host">val1</span> : <span class="id host host host host host host host host host host">val2</span>);   <span class="cm host host host host host host host host host host host host">// Remainder</span>
+<span class="id host host host host host host host host host host host host host host">div</span> = <span class="bi">%div</span>(<span class="id host host host host host host host host host host host host host host host host">val1</span> : <span class="id host host host host host host host host host host host host host host host host host host">val2</span>);   <span class="cm host host host host host host host host host host host host host host host host host host host host">// Integer Division</span>
+<span class="id host host host host host host host host host host host host host host host host host host host host host host">sqr</span> = <span class="bi">%sqrt</span>(<span class="id host host host host host host host host host host host host host host host host host_host host_host host_host host_host host_host">val</span>);         <span class="cm host host host host host host host host host host host host host host host host host_host host_host host_host host_host host_host host_host">// Square Root</span>
+
+<span class="kw host host host host host host host host host host host host host host host host host_host host_host host_host host_host host_host host_host host_host host_host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="conversion-bifs">Conversion BIFs</h2>
+                <p>These are your "casting" functions — like Python's <code>str()</code>, <code>int()</code>,
+                    <code>float()</code>:
+                </p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Conversion Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">s_val</span> = <span class="bi">%char</span>(<span class="id">n_val</span>);      <span class="cm">// Number to String</span>
+<span class="id">n_val</span> = <span class="bi">%dec</span>(<span class="id">s_val</span>:<span class="nm">7</span>:<span class="nm">2</span>);   <span class="cm">// String to Packed</span>
+<span class="id">i_val</span> = <span class="bi">%int</span>(<span class="id">s_val</span>);       <span class="cm">// String to Integer</span>
+<span class="id">u_val</span> = <span class="bi">%uns</span>(<span class="id">s_val</span>);       <span class="cm">// String to Unsigned</span>
+<span class="id">d_val</span> = <span class="bi">%date</span>(<span class="id">s_date</span>);     <span class="cm">// String to Date</span>
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="date-bifs">Date / Time BIFs</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Date/Time Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">today</span> = <span class="bi">%date</span>();           <span class="cm">// Get current date</span>
+<span class="id">now</span>   = <span class="bi">%time</span>();           <span class="cm">// Get current time</span>
+<span class="id">ts</span>    = <span class="bi">%timestamp</span>();      <span class="cm">// Get current timestamp</span>
+
+<span class="cm">// Arithmetic</span>
+<span class="id">nextMonth</span> = <span class="id">today</span> + <span class="bi">%months</span>(<span class="nm">1</span>);
+<span class="id">daysDiff</span>  = <span class="bi">%diff</span>(<span class="id">d1</span>:<span class="id">d2</span>:<span class="sp">*days</span>);
+<span class="id">yearPart</span>  = <span class="bi">%subdt</span>(<span class="id">today</span>:<span class="sp">*years</span>);
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="array-bifs">Array BIFs</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Array BIF Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">count</span> = <span class="bi">%elem</span>(<span class="id">myArray</span>);    <span class="cm">// Get size</span>
+<span class="id">index</span> = <span class="bi">%lookup</span>(<span class="st">'search'</span>:<span class="id">myArray</span>); <span class="cm">// Find element</span>
+<span class="bi">%sorta</span> <span class="id">myArray</span>;            <span class="cm">// Sort array</span>
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="other-bifs">Other Useful BIFs</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>BIF</th>
+                            <th>Purpose</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>%found</code></td>
+                            <td>Was last file op successful?</td>
+                            <td><code>if %found(CUSTFILE);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%eof</code></td>
+                            <td>End of file reached?</td>
+                            <td><code>dow not %eof(CUSTFILE);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%error</code></td>
+                            <td>Did an error occur?</td>
+                            <td><code>if %error;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%open</code></td>
+                            <td>Is file open?</td>
+                            <td><code>if %open(CUSTFILE);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%size</code></td>
+                            <td>Size of variable in bytes</td>
+                            <td><code>bytes = %size(myVar);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%alloc</code></td>
+                            <td>Allocate memory</td>
+                            <td><code>ptr = %alloc(1024);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%realloc</code></td>
+                            <td>Resize allocated memory</td>
+                            <td><code>ptr = %realloc(ptr:2048);</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%xlate</code></td>
+                            <td>Translate characters</td>
+                            <td><code>%xlate('abc':'ABC':str)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%check</code></td>
+                            <td>First char NOT in list</td>
+                            <td><code>%check('0123456789':str)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="chapter-nav">
+                    <a href="procedures.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Procedures</span></a>
+                    <a href="data-structures.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Data Structures</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

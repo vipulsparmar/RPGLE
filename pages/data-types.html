@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Complete guide to RPGLE data types: Packed, Zoned, Integer, Float, Character, Varchar, Date, Time, Timestamp, Indicator, and Pointer.">
+    <title>Data Types — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html" class="active">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#packed">Packed Decimal</a></li>
+                        <li><a href="#zoned">Zoned Decimal</a></li>
+                        <li><a href="#integer">Integer (Int)</a></li>
+                        <li><a href="#unsigned">Unsigned (Uns)</a></li>
+                        <li><a href="#float">Float</a></li>
+                        <li><a href="#char">Character (Char)</a></li>
+                        <li><a href="#varchar">Varchar</a></li>
+                        <li><a href="#date">Date</a></li>
+                        <li><a href="#time">Time</a></li>
+                        <li><a href="#timestamp">Timestamp</a></li>
+                        <li><a href="#indicator">Indicator (Ind)</a></li>
+                        <li><a href="#pointer">Pointer</a></li>
+                        <li><a href="#comparison">Python vs RPGLE</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Data
+                        Types</span></div>
+                <h1>RPGLE <span class="gradient-text">Data Types</span></h1>
+                <p class="lead">Unlike Python (which is dynamically typed), RPGLE is <strong>statically typed</strong> —
+                    you must declare the data type of every variable. RPGLE provides rich numeric, character, date/time,
+                    and special types optimized for business computing.</p>
+
+                <h2 id="overview">Data Types Overview</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Keyword</th>
+                            <th>Description</th>
+                            <th>Python Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Packed Decimal</td>
+                            <td><code>packed</code></td>
+                            <td>Compressed decimal number</td>
+                            <td><code>float / Decimal</code></td>
+                        </tr>
+                        <tr>
+                            <td>Zoned Decimal</td>
+                            <td><code>zoned</code></td>
+                            <td>One byte per digit</td>
+                            <td><code>float / Decimal</code></td>
+                        </tr>
+                        <tr>
+                            <td>Integer</td>
+                            <td><code>int</code></td>
+                            <td>Binary integer (3/5/10/20)</td>
+                            <td><code>int</code></td>
+                        </tr>
+                        <tr>
+                            <td>Unsigned</td>
+                            <td><code>uns</code></td>
+                            <td>Unsigned integer</td>
+                            <td><code>int (positive)</code></td>
+                        </tr>
+                        <tr>
+                            <td>Float</td>
+                            <td><code>float</code></td>
+                            <td>Floating point (4 or 8 bytes)</td>
+                            <td><code>float</code></td>
+                        </tr>
+                        <tr>
+                            <td>Character</td>
+                            <td><code>char</code></td>
+                            <td>Fixed-length string</td>
+                            <td><code>str</code></td>
+                        </tr>
+                        <tr>
+                            <td>Varchar</td>
+                            <td><code>varchar</code></td>
+                            <td>Variable-length string</td>
+                            <td><code>str</code></td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td><code>date</code></td>
+                            <td>Date value</td>
+                            <td><code>datetime.date</code></td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td><code>time</code></td>
+                            <td>Time value</td>
+                            <td><code>datetime.time</code></td>
+                        </tr>
+                        <tr>
+                            <td>Timestamp</td>
+                            <td><code>timestamp</code></td>
+                            <td>Date + Time + microseconds</td>
+                            <td><code>datetime.datetime</code></td>
+                        </tr>
+                        <tr>
+                            <td>Indicator</td>
+                            <td><code>ind</code></td>
+                            <td>Boolean (*on / *off)</td>
+                            <td><code>bool</code></td>
+                        </tr>
+                        <tr>
+                            <td>Pointer</td>
+                            <td><code>pointer</code></td>
+                            <td>Memory address</td>
+                            <td>N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 id="packed">Packed Decimal <span class="badge badge-blue">Most Common</span></h2>
+                <p>The <strong>most widely used</strong> numeric type in RPGLE. Packed decimal stores two digits per
+                    byte (plus a half-byte for the sign), making it space-efficient and precise for financial
+                    calculations.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — More Examples</span></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">discount</span>    <span class="dt">packed</span>(<span class="nm">5</span>:<span class="nm">2</span>) <span class="kw">inz</span>(<span class="nm">12.50</span>);
+<span class="dc">dcl-s</span> <span class="id">vatRate</span>     <span class="dt">packed</span>(<span class="nm">3</span>:<span class="nm">1</span>) <span class="kw host host">inz</span>(<span class="nm">20.0</span>);
+<span class="dc">dcl-s</span> <span class="id">exchangeRt</span>  <span class="dt host host">packed</span>(<span class="nm">11</span>:<span class="nm host">5</span>) <span class="kw host host host host">inz</span>(<span class="nm">1.08542</span>);
+<span class="dc">dcl-s</span> <span class="id">interestPts</span> <span class="dt host host host host host host">packed</span>(<span class="nm host">7</span>:<span class="nm host">4</span>) <span class="kw host host host host host host host host">inz</span>(<span class="nm">4.5000</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host">weight</span>      <span class="dt host host host host host host host host host host host host">packed</span>(<span class="nm host">9</span>:<span class="nm host">3</span>) <span class="kw host host host host host host host host host host host host host host">inz</span>(<span class="nm">145.230</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host">height</span>      <span class="dt host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">5</span>:<span class="nm host">2</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm">180.50</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host">temp</span>        <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">5</span>:<span class="nm host">2</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host">36.65</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">distance</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">15</span>:<span class="nm host">2</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host">1200.45</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">rating</span>      <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">1</span>:<span class="nm host">0</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host host host host">5</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">progress</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">packed</span>(<span class="nm host">5</span>:<span class="nm host">4</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host host host host host host host">0.9999</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box tip">
+                    <div class="box-title">✅ Storage</div>
+                    <p>A packed(7:2) uses only 4 bytes: <code>(7+1)/2 = 4 bytes</code>. Formula:
+                        <code>ceil((digits+1)/2)</code>. This is much more compact than zoned or character
+                        representations.
+                    </p>
+                </div>
+
+                <h2 id="zoned">Zoned Decimal</h2>
+                <p>Uses one full byte per digit. Less storage-efficient but sometimes needed for compatibility with
+                    display files and external systems.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Zoned Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">deptNo</span>    <span class="dt">zoned</span>(<span class="nm">3</span>:<span class="nm">0</span>) <span class="kw">inz</span>(<span class="nm">120</span>);
+<span class="dc">dcl-s</span> <span class="id">storeCd</span>   <span class="dt host host">zoned</span>(<span class="nm">4</span>:<span class="nm host">0</span>) <span class="kw host host host host">inz</span>(<span class="nm">9988</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host">branchId</span>  <span class="dt host host host host host host host host">zoned</span>(<span class="nm host">5</span>:<span class="nm host">0</span>) <span class="kw host host host host host host host host host host">inz</span>(<span class="nm">44123</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host">regionNo</span>  <span class="dt host host host host host host host host host host host host host host">zoned</span>(<span class="nm host">2</span>:<span class="nm host">0</span>) <span class="kw host host host host host host host host host host host host host host host host">inz</span>(<span class="nm">14</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host">legacyID</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host">zoned</span>(<span class="nm host">10</span>:<span class="nm host">0</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host">9876543210</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host">oldSerial</span> <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host">zoned</span>(<span class="nm host">8</span>:<span class="nm host">0</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host">12345678</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box note">
+                    <div class="box-title">📝 Packed vs Zoned</div>
+                    <p><strong>Use packed</strong> for internal calculations and storage. <strong>Use zoned</strong>
+                        when interfacing with display files, APIs, or legacy programs that expect one-byte-per-digit
+                        format.</p>
+                </div>
+
+                <h2 id="integer">Integer (Int)</h2>
+                <p>Binary integer. Use for counters, indexes, and when you need whole numbers.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Integer Variations</span></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">small</span>   <span class="dt">int</span>(<span class="nm">3</span>) <span class="kw host host">inz</span>(<span class="nm">127</span>);    <span class="cm">// 1 byte</span>
+<span class="dc">dcl-s</span> <span class="id host">normal</span>  <span class="dt host">int</span>(<span class="nm host">5</span>) <span class="kw host host host host">inz</span>(<span class="nm">32767</span>);  <span class="cm">// 2 bytes</span>
+<span class="dc">dcl-s</span> <span class="id host host">large</span>   <span class="dt host host">int</span>(<span class="nm host">10</span>);           <span class="cm">// 4 bytes (Standard)</span>
+<span class="dc">dcl-s</span> <span class="id host host host host">huge</span>    <span class="dt host host host host">int</span>(<span class="nm host">20</span>);           <span class="cm">// 8 bytes</span>
+
+<span class="dc">dcl-s</span> <span class="id host host host host host host">loopCount</span>  <span class="dt host host host host host host">int</span>(<span class="nm host host">10</span>) <span class="kw host host host host host host host host">inz</span>(<span class="nm host host host host">100</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host">pageNumber</span> <span class="dt host host host host host host host host host host host host">int</span>(<span class="nm host host host host host host">10</span>) <span class="kw host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host host host host">1</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host">scoreVal</span>   <span class="dt host host host host host host host host host host host host host host host host host host host host">int</span>(<span class="nm host host host host host host host host host host">10</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host host host host host host host host">500</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host">userId</span>     <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">int</span>(<span class="nm host host host host host host host host host host host host">10</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">errorCode</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">int</span>(<span class="nm host host host host host host host host host host host host">10</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host host host host host host host host host host host host">0</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="unsigned">Unsigned Integer (Uns)</h2>
+                <p>Like integer but only positive values — the full byte range is used for positive numbers.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Unsigned Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">uIndex</span>   <span class="dt">uns</span>(<span class="nm">5</span>) <span class="kw">inz</span>(<span class="nm">0</span>);
+<span class="dc">dcl-s</span> <span class="id host host">uCount</span>    <span class="dt host host">uns</span>(<span class="nm host host">10</span>) <span class="kw host host host host">inz</span>(<span class="nm">123456</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host">uFlags</span>    <span class="dt host host host host host host host host">uns</span>(<span class="nm host">5</span>) <span class="kw host host host host host host host host host host">inz</span>(<span class="nm">255</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host">uLarge</span>    <span class="dt host host host host host host host host host host host host host host">uns</span>(<span class="nm host">20</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host">uPtrOffset</span> <span class="dt host host host host host host host host host host host host host host host host host host host host">uns</span>(<span class="nm host">10</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host">uKeyVal</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host">uns</span>(<span class="nm host">5</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="nm host host host host host">32000</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="float">Float</h2>
+                <p>IEEE floating-point. Rarely used in business — packed decimal is preferred for monetary values
+                    because float can have rounding issues.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">pi</span>      <span class="dt">float</span>(<span class="nm">8</span>);  <span class="cm">// 8-byte double precision</span>
+<span class="dc">dcl-s</span> <span class="id">ratio</span>   <span class="dt">float</span>(<span class="nm">4</span>);  <span class="cm">// 4-byte single precision</span>
+
+<span class="id">pi</span> = <span class="nm">3.14159265358979</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box warning">
+                    <div class="box-title">⚠️ Avoid for Money</div>
+                    <p>Never use <code>float</code> for financial calculations. Use <code>packed</code> or
+                        <code>zoned</code> instead to avoid floating-point precision errors (e.g., 0.1 + 0.2 ≠ 0.3).
+                    </p>
+                </div>
+
+                <h2 id="char">Character (Char) <span class="badge badge-green">String Type</span></h2>
+                <p>Fixed-length character string. The most common string type. Always padded with blanks on the right to
+                    fill the declared length.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Fixed-Length Samples</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">state</span>     <span class="dt">char</span>(<span class="nm host">2</span>)   <span class="kw host host">inz</span>(<span class="st host host">'NY'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host">gender</span>    <span class="dt host host host host">char</span>(<span class="nm host host host host">1</span>)   <span class="kw host host host host host host host host">inz</span>(<span class="st host host host host host host host host">'M'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host">zipcode</span>   <span class="dt host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host">10</span>)  <span class="kw host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host">'10001'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host">country</span>   <span class="dt host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host">30</span>)  <span class="kw host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host">'USA'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host">status</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host">1</span>)   <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'A'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">itemType</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">8</span>)   <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'BOLT'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">deptCode</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">4</span>)   <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'ACCT'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">areaCode</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">3</span>)   <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'212'</span>);
+<span class="dc">dcl-s</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">initials</span>  <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">char</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">3</span>)   <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'JSP'</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="varchar">Varchar (Variable-Length)</h2>
+                <p>Stores characters with a length prefix. Gallery:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Varchar Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">v_name</span>     <span class="dt">varchar</span>(<span class="nm">50</span>) <span class="kw">inz</span>(<span class="st">'Antigravity AI'</span>);
+<span class="dc">dcl-s</span> <span class="id host host">v_json</span>     <span class="dt host host">varchar</span>(<span class="nm host host">10000</span>); <span class="cm host host host host">// Large buffer</span>
+<span class="dc">dcl-s host host host host host host">v_path</span>     <span class="dt host host host host host host host host">varchar</span>(<span class="nm host">255</span>) <span class="kw host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host">'/usr/local/bin'</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host">v_comment</span>  <span class="dt host host host host host host host host host host host host host host">varchar</span>(<span class="nm host">80</span>) <span class="kw host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host">'Work in progress'</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box tip">
+                    <div class="box-title">✅ When to use Varchar</div>
+                    <p>Use <code>varchar</code> when: building SQL statements, working with web services/JSON, string
+                        lengths vary widely, or you need Python-style string behavior without trailing blanks.</p>
+                </div>
+
+                <h2 id="date">Date</h2>
+                <p>Stores a calendar date. RPGLE natively supports date arithmetic — no external library needed (unlike
+                    Python's datetime module).</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Date Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">d_today</span>    <span class="dt host host">date</span> <span class="kw host host host host">inz</span>(<span class="bi host host host host host host">%date</span>());
+<span class="dc">dcl-s host host host host host host">d_iso</span>      <span class="dt host host host host host host host host">date</span>(<span class="sp host host host host host host host host host host">*iso</span>) <span class="kw host host host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host host host host">D'2024-01-01'</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host">d_usa</span>      <span class="dt host host host host host host host host host host host host host host">date</span>(<span class="sp host host host host host host host host host host host host host host host host host host">*usa</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host">D'12/31/2023'</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host host host host host host host host host host host">d_eur</span>      <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host">date</span>(<span class="sp host host host host host host host host host host host host host host host host host host host host host host host host host host host host">*eur</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host_host host_host host_host host_host host_host host_host host_host host_host host_host">D'31.12.2023'</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="time">Time</h2>
+                <p>Stores a time-of-day value (hours, minutes, seconds).</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Time Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">t_now</span>      <span class="dt host host">time</span> <span class="kw host host host host">inz</span>(<span class="bi host host host host host host">%time</span>());
+<span class="dc">dcl-s host host host host host host">t_hms</span>      <span class="dt host host host host host host host host">time</span>(<span class="sp host host host host host host host host host host">*hms</span>) <span class="kw host host host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host host host host">T'23.59.59'</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host">t_usa</span>      <span class="dt host host host host host host host host host host host host host host">time</span>(<span class="sp host host host host host host host host host host host host host host host host host host">*usa</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host">T'11:59 PM'</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="timestamp">Timestamp</h2>
+                <p>Combines date + time + microseconds. Like Python's <code>datetime.datetime</code>.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Timestamp Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">ts_now</span>     <span class="dt host host">timestamp</span> <span class="kw host host host host">inz</span>(<span class="bi host host host host host host">%timestamp</span>());
+<span class="dc">dcl-s host host host host host host">ts_custom</span>  <span class="dt host host host host host host host host">timestamp</span> <span class="kw host host host host host host host host host host">inz</span>(<span class="id host host host host host host host host host host host host">Z'2024-01-01-12.00.00'</span>);
+
+<span class="kw host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="indicator">Indicator (Ind) <span class="badge badge-purple">Boolean</span></h2>
+                <p>RPGLE's boolean type. Can be <code>*on</code> (true) or <code>*off</code> (false). Equivalent to
+                    Python's <code>True</code>/<code>False</code>.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Indicator Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">found</span>      <span class="dt host host">ind</span> <span class="kw host host host host">inz</span>(<span class="sp host host host host host host">*off</span>);
+<span class="dc">dcl-s host host host host host host">error</span>      <span class="dt host host host host host host host host">ind</span> <span class="kw host host host host host host host host host host">inz</span>(<span class="sp host host host host host host host host host host host host">*off</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host">eof</span>        <span class="dt host host host host host host host host host host host host host host">ind</span> <span class="kw host host host host host host host host host host host host host host host host">inz</span>(<span class="sp host host host host host host host host host host host host host host host host host host">*off</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host host host host host host host">isValid</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host">ind</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="sp host host host host host host host host host host host host host host host host host host host host host host host host host host">*on</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host host host host host host host host host host host host host host host">isAuth</span>     <span class="dt host host host host host host host host host host host host host host host host host host host host host host host host host host host host">ind</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="pointer">Pointer</h2>
+                <p>Stores memory addresses. Used in advanced scenarios like dynamic memory allocation and API calls.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Pointer Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">p_data</span>     <span class="dt host host">pointer</span>;
+<span class="dc">dcl-s host host host host host host">p_buffer</span>   <span class="dt host host host host host host host host">pointer</span>;
+<span class="dc">dcl-s host host host host host host host host host host host host">p_callback</span> <span class="dt host host host host host host host host host host host host host host">pointer</span>(<span class="sp host host host host host host host host host host host host host host host host host host">*proc</span>); <span class="cm host host host host host host host host host host host host host host host host host host host host">// Procedure pointer</span>
+
+<span class="id host host host host host host host host host host host host host host host host host host host host host host">p_data</span> = <span class="bi host host host host host host host host host host host host host host host host host host host host host host host host host host">%addr</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host">myVariable</span>);
+<span class="id host host host host host host host host host host host host host_host host_host host_host host_host host_host host_host host_host host_host host_host">p_buffer</span> = <span class="bi host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">%alloc</span>(<span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">1024</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="comparison">Python vs RPGLE Data Types</h2>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="cm"># Python is dynamically typed</span>
+<span class="id">name</span> = <span class="st">'Alice'</span>        <span class="cm"># str</span>
+<span class="id">age</span> = <span class="nm">30</span>              <span class="cm"># int</span>
+<span class="id">price</span> = <span class="nm">19.99</span>         <span class="cm"># float</span>
+<span class="id">active</span> = <span class="sp">True</span>         <span class="cm"># bool</span>
+<span class="id">today</span> = date.today()  <span class="cm"># date</span></pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="cm">// RPGLE is statically typed</span>
+<span class="dc">dcl-s</span> <span class="id">name</span>   <span class="dt">char</span>(<span class="nm">30</span>);
+<span class="dc">dcl-s</span> <span class="id">age</span>    <span class="dt">int</span>(<span class="nm">10</span>);
+<span class="dc">dcl-s</span> <span class="id">price</span>  <span class="dt">packed</span>(<span class="nm">7</span>:<span class="nm">2</span>);
+<span class="dc">dcl-s</span> <span class="id">active</span> <span class="dt">ind</span>;
+<span class="dc">dcl-s</span> <span class="id">today</span>  <span class="dt">date</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="getting-started.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Getting Started</span></a>
+                    <a href="variables.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Variables & Constants</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

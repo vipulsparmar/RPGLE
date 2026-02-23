@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE operators: arithmetic, comparison, logical, string concatenation, and operator precedence with Python comparisons.">
+    <title>Operators — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html" class="active">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#arithmetic">Arithmetic</a></li>
+                        <li><a href="#assignment">Assignment</a></li>
+                        <li><a href="#comparison">Comparison</a></li>
+                        <li><a href="#logical">Logical</a></li>
+                        <li><a href="#string">String Operations</a></li>
+                        <li><a href="#precedence">Precedence</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Operators</span>
+                </div>
+                <h1>Operators & <span class="gradient-text">Expressions</span></h1>
+                <p class="lead">RPGLE free format uses standard arithmetic, comparison, and logical operators very
+                    similar to Python and C. This chapter covers every operator you'll need.</p>
+
+                <h2 id="arithmetic">Arithmetic Operators</h2>
+                <p>RPGLE supports all standard math operations. Here is a gallery of common arithmetic tasks:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">num1</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">10</span>);
+<span class="dc">dcl-s</span> <span class="id host">num2</span> <span class="dt host">int</span>(<span class="nm host">10</span>) <span class="kw host">inz</span>(<span class="nm host host">20</span>);
+<span class="dc">dcl-s</span> <span class="id">sum</span>  <span class="dt">int</span>(<span class="nm">10</span>);
+
+<span class="id">sum</span> = <span class="id">num1</span> + <span class="id">num2</span>;
+<span class="fn">dsply</span> (<span class="st host">'The sum is: '</span> + <span class="bi host host">%char</span>(<span class="id">sum</span>));
+<span class="kw host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Operator</th>
+                            <th>Description</th>
+                            <th>RPGLE Example</th>
+                            <th>Python Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>+</code></td>
+                            <td>Addition</td>
+                            <td><code>result = a + b;</code></td>
+                            <td><code>result = a + b</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>-</code></td>
+                            <td>Subtraction</td>
+                            <td><code>result = a - b;</code></td>
+                            <td><code>result = a - b</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*</code></td>
+                            <td>Multiplication</td>
+                            <td><code>result = a * b;</code></td>
+                            <td><code>result = a * b</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/</code></td>
+                            <td>Division</td>
+                            <td><code>result = a / b;</code></td>
+                            <td><code>result = a / b</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>**</code></td>
+                            <td>Exponentiation</td>
+                            <td><code>result = a ** 2;</code></td>
+                            <td><code>result = a ** 2</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>%rem</code></td>
+                            <td>Remainder (Modulo)</td>
+                            <td><code>result = %rem(a:b);</code></td>
+                            <td><code>result = a % b</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Arithmetic Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">total</span> = <span class="id">price</span> + <span class="id">tax</span>;        <span class="cm">// Addition</span>
+<span class="id">net</span> = <span class="id">gross</span> - <span class="id">deduct</span>;      <span class="cm">// Subtraction</span>
+<span class="id">area</span> = <span class="id">length</span> * <span class="id">width</span>;      <span class="cm">// Multiplication</span>
+<span class="id">avg</span> = <span class="id">sum</span> / <span class="id">count</span>;          <span class="cm">// Division</span>
+<span class="id">cubed</span> = <span class="id">x</span> ** <span class="nm">3</span>;             <span class="cm">// Exponentiation</span>
+<span class="id">rem</span> = <span class="bi">%rem</span>(<span class="id">val</span>:<span class="nm">2</span>);          <span class="cm">// Remainder (Modulo)</span>
+
+<span class="cm">// Financial patterns</span>
+<span class="id">interest</span> = <span class="id">balance</span> * <span class="id">rate</span>;
+<span class="id">markup</span> = <span class="id">cost</span> * <span class="nm">1.25</span>;
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="assignment">Assignment Operators</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Operator</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>=</code></td>
+                            <td>Assign value</td>
+                            <td><code>x = 10;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>+=</code></td>
+                            <td>Add and assign</td>
+                            <td><code>x += 5; // x = x + 5</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>-=</code></td>
+                            <td>Subtract and assign</td>
+                            <td><code>x -= 3; // x = x - 3</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*=</code></td>
+                            <td>Multiply and assign</td>
+                            <td><code>x *= 2; // x = x * 2</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/=</code></td>
+                            <td>Divide and assign</td>
+                            <td><code>x /= 4; // x = x / 4</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>**=</code></td>
+                            <td>Power and assign</td>
+                            <td><code>x **= 2; // x = x ** 2</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Assignment Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">val</span> = <span class="nm">10</span>;           <span class="cm">// Simple assignment</span>
+<span class="id">val</span> += <span class="nm">5</span>;          <span class="cm">// Add and assign (15)</span>
+<span class="id">val</span> -= <span class="nm">2</span>;          <span class="cm">// Subtract and assign (13)</span>
+<span class="id">val</span> *= <span class="nm">2</span>;          <span class="cm">// Multiply and assign (26)</span>
+<span class="id">val</span> /= <span class="nm">13</span>;         <span class="cm">// Divide and assign (2)</span>
+<span class="id">val</span> **= <span class="nm">3</span>;         <span class="cm">// Power and assign (8)</span>
+<span class="kw host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="box-title">✅ Just Like Python!</div>
+                    <p>RPGLE's compound assignment operators (<code>+=</code>, <code>-=</code>, etc.) work exactly the
+                        same as Python's. This is one of the most "modern" features of RPGLE free format.</p>
+                </div>
+
+                <h2 id="comparison">Comparison Operators</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>RPGLE</th>
+                            <th>Meaning</th>
+                            <th>Python</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>=</code></td>
+                            <td>Equal to</td>
+                            <td><code>==</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;&gt;</code></td>
+                            <td>Not equal to</td>
+                            <td><code>!=</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&gt;</code></td>
+                            <td>Greater than</td>
+                            <td><code>&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;</code></td>
+                            <td>Less than</td>
+                            <td><code>&lt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&gt;=</code></td>
+                            <td>Greater than or equal</td>
+                            <td><code>&gt;=</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;=</code></td>
+                            <td>Less than or equal</td>
+                            <td><code>&lt;=</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box warning">
+                    <div class="box-title">⚠️ Important Difference</div>
+                    <p>In RPGLE, <code>=</code> is used for both assignment AND comparison! The compiler determines
+                        meaning from context: inside <code>if</code>/<code>dow</code>/<code>dou</code> it's comparison;
+                        otherwise it's assignment. Python uses <code>=</code> for assignment and <code>==</code> for
+                        comparison.</p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Comparison Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="kw">if</span> <span class="id">val</span> = <span class="nm">10</span>;    <span class="cm">// Equality check</span>
+<span class="kw">if</span> <span class="id host">val</span> <> <span class="nm host">5</span>;   <span class="cm host">// Inequality check</span>
+<span class="kw">if</span> <span class="id host host">score</span> > <span class="nm host host">90</span>; <span class="cm host host host host">// Greater than</span>
+<span class="kw host host host host">if</span> <span class="id host host host host host host">temp</span> < <span class="nm host host host host host host">0</span>;   <span class="cm host host host host host host host host">// Less than</span>
+<span class="kw host host host host host host host host">if</span> <span class="id host host host host host host host host host host">stock</span> >= <span class="nm host host host host host host host host host host">100</span>; <span class="cm host host host host host host host host host host host host">// Greater or Equal</span>
+<span class="kw host host host host host host host host host host host host">if</span> <span class="id host host host host host host host host host host host host host host">limit</span> <= <span class="nm host host host host host host host host host host host host host host">500</span>; <span class="cm host host host host host host host host host host host host host host host host">// Less or Equal</span>
+<span class="kw host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="logical">Logical Operators</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>RPGLE</th>
+                            <th>Meaning</th>
+                            <th>Python</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>and</code></td>
+                            <td>Logical AND</td>
+                            <td><code>and</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>or</code></td>
+                            <td>Logical OR</td>
+                            <td><code>or</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>not</code></td>
+                            <td>Logical NOT</td>
+                            <td><code>not</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Logical Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// Compound logic</span>
+<span class="kw">if</span> (<span class="id">age</span> >= <span class="nm">18</span> <span class="kw host host">and</span> <span class="id host host">hasAccount</span>);
+  <span class="cm host host host host">// Case 1</span>
+<span class="kw host host host host host host">endif</span>;
+
+<span class="kw host host host host host host host host">if</span> (<span class="id host host host host host host host host host host">isAdmin</span> <span class="kw host host host host host host host host host host host host">or</span> <span class="id host host host host host host host host host host host host host host">isOwner</span>);
+  <span class="cm host host host host host host host host host host host host host host host host">// Case 2</span>
+<span class="kw host host host host host host host host host host host host host host host host host host">endif</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host">if</span> (<span class="kw host host host host host host host host host host host host host host host host host host host host host host">not</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host">isLocked</span>);
+  <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host host host">// Case 3</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endif</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="string">String Operations</h2>
+                <p>String concatenation uses the <code>+</code> operator (same as Python):</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — String Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">fullName</span> = <span class="bi">%trim</span>(<span class="id">first</span>) + <span class="st">' '</span> + <span class="bi">%trim</span>(<span class="id">last</span>);
+<span class="id host host">msg</span> = <span class="st host host host host">'Error: '</span> + <span class="bi host host host host host host">%char</span>(<span class="id host host host host host host host host">errorCode</span>) + <span class="st host host host host host host host host host host">' - '</span> + <span class="id host host host host host host host host host host host host">errorMessage</span>;
+<span class="id host host host host host host host host host host host host host host">path</span> = <span class="id host host host host host host host host host host host host host host host host">root</span> + <span class="st host host host host host host host host host host host host host host host host host host">'/'</span> + <span class="id host host host host host host host host host host host host host host host host host host host host">file</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="precedence">Operator Precedence</h2>
+                <p>From highest to lowest (same intuition as math and Python):</p>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>Operators</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 (Highest)</td>
+                            <td><code>()</code> Parentheses</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><code>**</code> Exponentiation</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><code>not</code> Logical NOT</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><code>*  /</code> Multiplication, Division</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><code>+  -</code> Addition, Subtraction</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><code>= &lt;&gt; &gt; &lt; &gt;= &lt;=</code> Comparison</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><code>and</code> Logical AND</td>
+                        </tr>
+                        <tr>
+                            <td>8 (Lowest)</td>
+                            <td><code>or</code> Logical OR</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Precedence Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">res1</span> = <span class="nm">10</span> + <span class="nm host host">5</span> * <span class="nm host host host host">2</span>;          <span class="cm host host host host host host">// result is 20</span>
+<span class="id host host host host host host">res2</span> = (<span class="nm host host host host host host host host">10</span> + <span class="nm host host host host host host host host host host">5</span>) * <span class="nm host host host host host host host host host host host host">2</span>;        <span class="cm host host host host host host host host host host host host host host">// result is 30</span>
+<span class="id host host host host host host host host host host host host host host host host">check</span> = <span class="id host host host host host host host host host host host host host host host host host host">age</span> > <span class="nm host host host host host host host host host host host host host host host host host host host host">18</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host">and</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host">score</span> > <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host">50</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="variables.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Variables & Constants</span></a>
+                    <a href="control-structures.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Control Structures</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

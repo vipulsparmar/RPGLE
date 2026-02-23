@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE File Operations: DCL-F, READ, WRITE, UPDATE, DELETE, CHAIN, SETLL, SETGT, and working with physical and logical files in free format.">
+    <title>File I/O — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html" class="active">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#dcl-f">Declaring Files (DCL-F)</a></li>
+                        <li><a href="#read">Reading Records</a></li>
+                        <li><a href="#chain">CHAIN (Direct Read)</a></li>
+                        <li><a href="#write">Writing Records</a></li>
+                        <li><a href="#update">Updating Records</a></li>
+                        <li><a href="#delete">Deleting Records</a></li>
+                        <li><a href="#setll">SETLL / SETGT</a></li>
+                        <li><a href="#open-close">OPEN / CLOSE</a></li>
+                        <li><a href="#complete">Complete Example</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>File I/O</span>
+                </div>
+                <h1>File <span class="gradient-text">Operations</span></h1>
+                <p class="lead">RPGLE has powerful, built-in file I/O — no imports needed. Unlike Python where you'd use
+                    <code>open()</code> or a database library, RPGLE works directly with DB2 files (tables) on IBM i
+                    using operation codes like <code>read</code>, <code>write</code>, <code>chain</code>,
+                    <code>update</code>, and <code>delete</code>.
+                </p>
+
+                <h2 id="dcl-f">Declaring Files with DCL-F</h2>
+                <p>Before using a file, declare it with <code>dcl-f</code>:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Input only (read)</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span>;
+
+<span class="cm">// Full CRUD (read, write, update, delete)</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">usage</span>(<span class="sp">*input</span>:<span class="sp">*output</span>:<span class="sp">*update</span>:<span class="sp">*delete</span>);
+
+<span class="cm">// Keyed access (using a keyed logical file)</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>;
+
+<span class="cm">// Output only (write new records)</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">usage</span>(<span class="sp">*output</span>);
+
+<span class="cm">// Qualified (fields accessed as CUSTFILE.fieldName)</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span> <span class="kw">qualified</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box note">
+                    <div class="box-title">📝 Python Comparison</div>
+                    <p>In Python you'd do <code>conn = sqlite3.connect('db')</code> and then
+                        <code>cursor.execute('SELECT ...')</code>. In RPGLE, <code>dcl-f</code> binds the program
+                        directly to a DB2 file at compile time — no connection string needed. The file's fields
+                        automatically become available as program variables.
+                    </p>
+                </div>
+
+                <h2 id="read">Reading Records</h2>
+                <h3>Sequential Read — Read All Records</h3>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">import</span> <span class="id">sqlite3</span>
+<span class="id">conn</span> = <span class="fn">sqlite3.connect</span>(<span class="st">'db'</span>)
+<span class="id">cursor</span> = <span class="id">conn</span>.<span class="fn">execute</span>(<span class="st">'SELECT * FROM customers'</span>)
+<span class="kw">for</span> <span class="id">row</span> <span class="kw">in</span> <span class="id">cursor</span>:
+    <span class="fn">print</span>(<span class="id">row</span>)</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span>;
+
+<span class="kw">read</span> <span class="id">CUSTFILE</span>;
+<span class="kw">dow</span> <span class="kw">not</span> <span class="bi">%eof</span>(<span class="id">CUSTFILE</span>);
+  <span class="fn">dsply</span> <span class="id">CUSTNM</span>;
+  <span class="kw">read</span> <span class="id">CUSTFILE</span>;
+<span class="kw">enddo</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>READE — Read with Equal Key</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-f</span> <span class="id">ORDERFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>;
+
+<span class="cm">// Read all orders for customer 1001</span>
+<span class="kw">setll</span> <span class="nm">1001</span> <span class="id">ORDERFILE</span>;
+<span class="kw">reade</span> <span class="nm">1001</span> <span class="id">ORDERFILE</span>;
+<span class="kw">dow</span> <span class="kw">not</span> <span class="bi">%eof</span>(<span class="id">ORDERFILE</span>);
+  <span class="cm">// Process each order for customer 1001</span>
+  <span class="fn">dsply</span> <span class="id">ORDNUM</span>;
+  <span class="kw">reade</span> <span class="nm">1001</span> <span class="id">ORDERFILE</span>;
+<span class="kw">enddo</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="chain">CHAIN — Direct Key Lookup</h2>
+                <p><code>chain</code> reads a specific record by key — like a Python dictionary lookup or
+                    <code>SELECT WHERE id = ?</code>:
+                </p>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="id">cursor</span>.<span class="fn">execute</span>(
+    <span class="st">'SELECT * FROM customers WHERE id = ?'</span>,
+    (<span class="nm">1001</span>,)
+)
+<span class="id">row</span> = <span class="id">cursor</span>.<span class="fn">fetchone</span>()
+<span class="kw">if</span> <span class="id">row</span>:
+    <span class="fn">print</span>(<span class="id">row</span>[<span class="st">'name'</span>])</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>;
+
+<span class="kw">chain</span> <span class="nm">1001</span> <span class="id">CUSTFILE</span>;
+<span class="kw">if</span> <span class="bi">%found</span>(<span class="id">CUSTFILE</span>);
+  <span class="fn">dsply</span> <span class="id">CUSTNM</span>;
+<span class="kw">else</span>;
+  <span class="fn">dsply</span> <span class="st">'Not found'</span>;
+<span class="kw">endif</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Composite Key Lookup</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// File keyed by company + department</span>
+<span class="dc">dcl-f</span> <span class="id">DEPTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>;
+
+<span class="cm">// Lookup with composite key</span>
+<span class="kw">chain</span> (<span class="st">'ACME'</span> : <span class="st">'IT'</span>) <span class="id">DEPTFILE</span>;
+<span class="kw">if</span> <span class="bi">%found</span>(<span class="id">DEPTFILE</span>);
+  <span class="fn">dsply</span> <span class="id">DPTNAM</span>;
+<span class="kw">endif</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="write">Writing Records</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">usage</span>(<span class="sp">*output</span>);
+
+<span class="cm">// Set field values</span>
+<span class="id">CUSTID</span> = <span class="nm">9999</span>;
+<span class="id">CUSTNM</span> = <span class="st">'New Customer'</span>;
+<span class="id">CUSTAD</span> = <span class="st">'123 New St'</span>;
+<span class="id">CUSTBL</span> = <span class="nm">0</span>;
+
+<span class="cm">// Write the record</span>
+<span class="kw">write</span> <span class="id">CUSTREC</span>;   <span class="cm">// CUSTREC = record format name</span></pre>
+                    </div>
+                </div>
+
+                <h2 id="update">Updating Records</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span> <span class="kw">usage</span>(<span class="sp">*input</span>:<span class="sp">*update</span>);
+
+<span class="cm">// First, read (lock) the record</span>
+<span class="kw">chain</span> <span class="nm">1001</span> <span class="id">CUSTFILE</span>;
+<span class="kw">if</span> <span class="bi">%found</span>(<span class="id">CUSTFILE</span>);
+  <span class="cm">// Modify fields</span>
+  <span class="id">CUSTNM</span> = <span class="st">'Updated Name'</span>;
+  <span class="id">CUSTBL</span> = <span class="id">CUSTBL</span> + <span class="nm">100.00</span>;
+  <span class="cm">// Write changes back</span>
+  <span class="kw">update</span> <span class="id">CUSTREC</span>;
+<span class="kw">endif</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="box-title">⚠️ Record Locking</div>
+                    <p>When you <code>chain</code> or <code>read</code> a record for update, RPGLE locks it. Other
+                        programs cannot modify it until you <code>update</code> or <code>unlock</code> it. Always ensure
+                        you update or unlock promptly to avoid lock contention.</p>
+                </div>
+
+                <h2 id="delete">Deleting Records</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span> <span class="kw">usage</span>(<span class="sp">*input</span>:<span class="sp">*delete</span>);
+
+<span class="cm">// Delete by key</span>
+<span class="kw">delete</span> <span class="nm">1001</span> <span class="id">CUSTFILE</span>;
+<span class="kw">if</span> <span class="bi">%found</span>(<span class="id">CUSTFILE</span>);
+  <span class="fn">dsply</span> <span class="st">'Record deleted'</span>;
+<span class="kw">else</span>;
+  <span class="fn">dsply</span> <span class="st">'Record not found'</span>;
+<span class="kw">endif</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="setll">Positioning — SETLL / SETGT</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Meaning</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>setll</code></td>
+                            <td>Set Lower Limit</td>
+                            <td>Position cursor at or before the key</td>
+                        </tr>
+                        <tr>
+                            <td><code>setgt</code></td>
+                            <td>Set Greater Than</td>
+                            <td>Position cursor after the key</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>;
+
+<span class="cm">// Check if a key exists (without reading)</span>
+<span class="kw">setll</span> <span class="nm">1001</span> <span class="id">CUSTFILE</span>;
+<span class="kw">if</span> <span class="bi">%equal</span>(<span class="id">CUSTFILE</span>);
+  <span class="fn">dsply</span> <span class="st">'Key 1001 exists'</span>;
+<span class="kw">endif</span>;
+
+<span class="cm">// Read backwards from a key</span>
+<span class="kw">setgt</span> <span class="nm">1001</span> <span class="id">CUSTFILE</span>;
+<span class="kw">readp</span> <span class="id">CUSTFILE</span>;   <span class="cm">// Read previous record</span></pre>
+                    </div>
+                </div>
+
+                <h2 id="open-close">Dynamic OPEN / CLOSE</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// Declare with USROPN — manual open/close</span>
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span> <span class="kw">usropn</span>;
+
+<span class="cm">// Open when needed</span>
+<span class="kw">if</span> <span class="kw">not</span> <span class="bi">%open</span>(<span class="id">CUSTFILE</span>);
+  <span class="kw">open</span> <span class="id">CUSTFILE</span>;
+<span class="kw">endif</span>;
+
+<span class="cm">// ... do work ...</span>
+
+<span class="cm">// Close when done</span>
+<span class="kw">close</span> <span class="id">CUSTFILE</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="complete">Complete CRUD Example</h2>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-filename">CUSTMAINT.RPGLE</span><button
+                            class="copy-btn">📋 Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">ctl-opt</span> <span class="kw">dftactgrp</span>(<span class="sp">*no</span>) <span class="kw">main</span>(<span class="fn">main</span>);
+
+<span class="dc">dcl-f</span> <span class="id">CUSTFILE</span> <span class="kw">disk</span> <span class="kw">keyed</span>
+        <span class="kw">usage</span>(<span class="sp">*input</span>:<span class="sp">*output</span>:<span class="sp">*update</span>:<span class="sp">*delete</span>);
+
+<span class="dc">dcl-proc</span> <span class="fn">main</span>;
+  <span class="dc">dcl-s</span> <span class="id">count</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">0</span>);
+
+  <span class="cm">// CREATE — Add a new customer</span>
+  <span class="id">CUSTID</span> = <span class="nm">5001</span>;
+  <span class="id">CUSTNM</span> = <span class="st">'Alice Johnson'</span>;
+  <span class="id">CUSTAD</span> = <span class="st">'123 Oak Ave'</span>;
+  <span class="id">CUSTBL</span> = <span class="nm">1500.00</span>;
+  <span class="kw">write</span> <span class="id">CUSTREC</span>;
+
+  <span class="cm">// READ — Get customer by key</span>
+  <span class="kw">chain</span> <span class="nm">5001</span> <span class="id">CUSTFILE</span>;
+  <span class="kw">if</span> <span class="bi">%found</span>(<span class="id">CUSTFILE</span>);
+    <span class="fn">dsply</span> (<span class="st">'Found: '</span> + <span class="bi">%trim</span>(<span class="id">CUSTNM</span>));
+  <span class="kw">endif</span>;
+
+  <span class="cm">// UPDATE — Modify the record</span>
+  <span class="kw">chain</span> <span class="nm">5001</span> <span class="id">CUSTFILE</span>;
+  <span class="kw">if</span> <span class="bi">%found</span>(<span class="id">CUSTFILE</span>);
+    <span class="id">CUSTBL</span> += <span class="nm">250.00</span>;
+    <span class="kw">update</span> <span class="id">CUSTREC</span>;
+  <span class="kw">endif</span>;
+
+  <span class="cm">// LIST — Read all records</span>
+  <span class="kw">read</span> <span class="id">CUSTFILE</span>;
+  <span class="kw">dow</span> <span class="kw">not</span> <span class="bi">%eof</span>(<span class="id">CUSTFILE</span>);
+    <span class="id">count</span> += <span class="nm">1</span>;
+    <span class="fn">dsply</span> <span class="bi">%trim</span>(<span class="id">CUSTNM</span>);
+    <span class="kw">read</span> <span class="id">CUSTFILE</span>;
+  <span class="kw">enddo</span>;
+
+  <span class="fn">dsply</span> (<span class="st">'Total: '</span> + <span class="bi">%char</span>(<span class="id">count</span>));
+
+  <span class="cm">// DELETE — Remove the record</span>
+  <span class="kw">delete</span> <span class="nm">5001</span> <span class="id">CUSTFILE</span>;
+
+  <span class="sp">*inlr</span> = <span class="sp">*on</span>;
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — File Operation Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// 1. Lookup & Process</span>
+<span class="kw">chain</span> <span class="id">custKey</span> <span class="id">CUSTFILE</span>;
+<span class="kw host host">if</span> <span class="bi host host">%found</span>(<span class="id host host">CUSTFILE</span>);
+  <span class="cm host host host host">// Update or Display</span>
+<span class="kw host host host host host host">endif</span>;
+
+<span class="cm host host host host host host host host">// 2. Set List Positioning</span>
+<span class="kw host host host host host host host host host host">setll</span> <span class="id host host host host host host host host host host host host">category</span> <span class="id host host host host host host host host host host host host host host">PRODFILE</span>;
+<span class="kw host host host host host host host host host host host host host host host host">reade</span> <span class="id host host host host host host host host host host host host host host host host host host">category</span> <span class="id host host host host host host host host host host host host host host host host host host host host">PRODFILE</span>;
+
+<span class="cm host host host host host host host host host host host host host host host host host host host host host host">// 3. Sequential Scan</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host">read</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host">INPFILE</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dow</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">not</span> <span class="bi host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">%eof</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">INPFILE</span>);
+  <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">// logic</span>
+  <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">read</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">INPFILE</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">enddo</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="box-title">✅ RPGLE vs SQL</div>
+                    <p>RPGLE's native file I/O is extremely fast for record-level access. For set-based operations
+                        (joins, aggregations), you can also embed SQL directly in RPGLE with <code>exec sql</code> —
+                        giving you the best of both worlds!</p>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="data-structures.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Data Structures</span></a>
+                    <a href="../index.html" class="chapter-link next"><span class="label">Finish →</span><span
+                            class="title">Back to Home</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

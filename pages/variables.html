@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Learn how to declare variables with DCL-S and constants with DCL-C in RPGLE free format. Covers initialization, naming rules, and scope.">
+    <title>Variables & Constants — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html" class="active">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#dcl-s">DCL-S (Variables)</a></li>
+                        <li><a href="#inz">Initialization (INZ)</a></li>
+                        <li><a href="#naming">Naming Rules</a></li>
+                        <li><a href="#dcl-c">DCL-C (Constants)</a></li>
+                        <li><a href="#scope">Variable Scope</a></li>
+                        <li><a href="#like">LIKE Keyword</a></li>
+                        <li><a href="#special-values">Special Values</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Variables &
+                        Constants</span></div>
+                <h1>Variables & <span class="gradient-text">Constants</span></h1>
+                <p class="lead">In RPGLE, every variable must be explicitly declared before use. This chapter covers
+                    <code>dcl-s</code> for standalone variables, <code>dcl-c</code> for constants, initialization,
+                    naming conventions, and scope rules.
+                </p>
+
+                <h2 id="dcl-s">Declaring Variables with DCL-S</h2>
+                <p><code>dcl-s</code> (Declare Standalone) is used to declare individual variables. The syntax is:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">Syntax</span></div>
+                    <div class="code-content">
+                        <pre><span class="dc">dcl-s</span> <span class="id">variableName</span> <span class="dt">dataType</span>(<span class="id">parameters</span>) <span class="kw">keywords</span>;</pre>
+                    </div>
+                </div>
+
+                <h3>1. The Fundamentals: Basics</h3>
+                <p>Let's start with the simplest possible declaration. We declare a variable, give it a value, and
+                    display it.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">message</span> <span class="dt">char</span>(<span class="nm">20</span>);
+
+<span class="id">message</span> = <span class="st">'Hello RPGLE!'</span>;
+<span class="fn">dsply</span> <span class="id">message</span>;
+
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h3>2. Practical Declaration Examples</h3>
+                <p>Here are many different ways to declare variables across different domains:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Snippet Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// User Profile</span>
+<span class="dc">dcl-s</span> <span class="id">userId</span>      <span class="dt">int</span>(<span class="nm">10</span>);
+<span class="dc">dcl-s</span> <span class="id">username</span>    <span class="dt">varchar</span>(<span class="nm">25</span>);
+<span class="dc">dcl-s</span> <span class="id">emailAddr</span>   <span class="dt">varchar</span>(<span class="nm">100</span>);
+<span class="dc">dcl-s</span> <span class="id">lastLogin</span>   <span class="dt">timestamp</span>;
+
+<span class="cm">// Inventory Management</span>
+<span class="dc">dcl-s</span> <span class="id">skuCode</span>     <span class="dt">char</span>(<span class="nm">12</span>);
+<span class="dc">dcl-s</span> <span class="id">stockQty</span>    <span class="dt">int</span>(<span class="nm">10</span>);
+<span class="dc">dcl-s</span> <span class="id">unitPrice</span>   <span class="dt">packed</span>(<span class="nm host">9</span>:<span class="nm host">2</span>);
+<span class="dc">dcl-s</span> <span class="id">isDiscounted</span> <span class="dt">ind</span>;
+
+<span class="cm">// Financial Transactions</span>
+<span class="dc">dcl-s</span> <span class="id">accountNum</span>  <span class="dt host">packed</span>(<span class="nm">20</span>:<span class="nm">0</span>);
+<span class="dc">dcl-s</span> <span class="id">balance</span>     <span class="dt host host">packed</span>(<span class="nm">15</span>:<span class="nm">2</span>);
+<span class="dc">dcl-s</span> <span class="id">pendingAmt</span>  <span class="dt host host host host">packed</span>(<span class="nm">15</span>:<span class="nm host">2</span>);
+<span class="dc">dcl-s</span> <span class="id">currency</span>    <span class="dt">char</span>(<span class="nm">3</span>);
+
+<span class="cm">// Date Math Variables</span>
+<span class="dc">dcl-s</span> <span class="id">birthDate</span>   <span class="dt">date</span>;
+<span class="dc">dcl-s</span> <span class="id">today</span>       <span class="dt">date</span> <span class="kw">inz</span>(<span class="sp">*sys</span>);
+<span class="dc">dcl-s</span> <span class="id">daysDiff</span>    <span class="dt">int</span>(<span class="nm">10</span>);
+
+<span class="cm">// Flags</span>
+<span class="dc">dcl-s</span> <span class="id">foundError</span>  <span class="dt">ind</span> <span class="kw">inz</span>(<span class="sp">*off</span>);
+<span class="dc">dcl-s</span> <span class="id">fileEnd</span>     <span class="dt">ind</span> <span class="kw host host">inz</span>(<span class="sp host">*off</span>);
+<span class="dc">dcl-s</span> <span class="id">isValid</span>     <span class="dt">ind</span> <span class="kw host host host host">inz</span>(<span class="sp host host">*on</span>);
+
+<span class="kw">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box note">
+                    <div class="box-title">📝 Python Comparison</div>
+                    <p>In Python, you just write <code>price = 0</code>. In RPGLE, you must declare type first:
+                        <code>dcl-s price packed(7:2);</code>. Think of <code>dcl-s</code> as Python's type hints on
+                        steroids — enforced at compile time.
+                    </p>
+                </div>
+
+                <h2 id="inz">Initialization with INZ</h2>
+                <p>The <code>inz</code> keyword sets an initial value. Without it, numerics default to 0, characters to
+                    blanks, indicators to *off, and dates to the system default.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Initialization Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">user</span>     <span class="dt">char</span>(<span class="nm">30</span>)     <span class="kw">inz</span>(<span class="st">'Antigravity'</span>);
+<span class="dc">dcl-s host host">rate</span>     <span class="dt host host">packed</span>(<span class="nm host host">7</span>:<span class="nm host host">2</span>)  <span class="kw host host host host">inz</span>(<span class="nm">15.50</span>);
+<span class="dc">dcl-s host host host host host host">isDone</span>   <span class="dt host host host host host host host host">ind</span>          <span class="kw host host host host host host host host host host host host">inz</span>(<span class="sp host host host host host host host host host host host host host host">*off</span>);
+<span class="dc">dcl-s host host host host host host host host host host host host host host">today</span>    <span class="dt host host host host host host host host host host host host host host host host">date</span>         <span class="kw host host host host host host host host host host host_host host_host host_host host_host">inz</span>(<span class="bi host host host host host host host host host host host_host host_host host_host host_host host_host">%date</span>());
+<span class="dc">dcl-s host host host host host host host host host host host host host host host host host host">empty</span>    <span class="dt host host host host host host host host host host host host host host host host host host host host">varchar</span>(<span class="nm host">100</span>) <span class="kw host host host host host host host host host host host host host host host host host host host host host host">inz</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host">''</span>);
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="naming">Naming Rules & Conventions</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Rule</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Max length</td>
+                            <td>Up to <strong>4096 characters</strong> (practically unlimited)</td>
+                        </tr>
+                        <tr>
+                            <td>First character</td>
+                            <td>Must be a letter (A-Z) or underscore (_)</td>
+                        </tr>
+                        <tr>
+                            <td>Subsequent</td>
+                            <td>Letters, digits (0-9), underscores</td>
+                        </tr>
+                        <tr>
+                            <td>Case sensitivity</td>
+                            <td><strong>Not case-sensitive</strong> — <code>myVar</code> = <code>MYVAR</code> =
+                                <code>MyVar</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Special characters</td>
+                            <td>#, @, $ are allowed but discouraged</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Recommended Naming Conventions</h3>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="cm">// camelCase (most popular in modern RPGLE)</span>
+<span class="dc">dcl-s</span> <span class="id">customerName</span>    <span class="dt">char</span>(<span class="nm">50</span>);
+<span class="dc">dcl-s</span> <span class="id">totalAmount</span>     <span class="dt">packed</span>(<span class="nm">11</span>:<span class="nm">2</span>);
+<span class="dc">dcl-s</span> <span class="id">isOrderComplete</span> <span class="dt">ind</span>;
+
+<span class="cm">// Prefix for global variables</span>
+<span class="dc">dcl-s</span> <span class="id">g_companyName</span>   <span class="dt">char</span>(<span class="nm">50</span>);
+
+<span class="cm">// UPPERCASE for constants</span>
+<span class="dc">dcl-c</span> <span class="id">MAX_RETRIES</span>     <span class="nm">5</span>;
+<span class="dc">dcl-c</span> <span class="id">TAX_RATE</span>        <span class="nm">0.18</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="dcl-c">Constants with DCL-C</h2>
+                <p>Constants are values that never change during program execution. Use <code>dcl-c</code> to declare
+                    them. The compiler infers the type automatically.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Constants Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-c</span> <span class="id">MAX_ITEMS</span>   <span class="nm">100</span>;
+<span class="dc host host">dcl-c host host host host host host">VERSION</span>     <span class="st host host host host host host host host">'2.0.4'</span>;
+<span class="dc host host host host host host host host host host host host">URL</span>         <span class="st host host host host host host host host host host host host host host">'https://ibm.com'</span>;
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host">IS_DEBUG</span>    <span class="sp host host host host host host host host host host host host host host host host host host host host host host host host host host host host">*on</span>;
+<span class="dc host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">PI</span>          <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">3.14159</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="cm"># Python convention (not enforced)</span>
+<span class="id">MAX_RECORDS</span> = <span class="nm">999</span>
+<span class="id">TAX_RATE</span> = <span class="nm">0.18</span>
+<span class="id">APP_NAME</span> = <span class="st">'My App'</span></pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="cm">// RPGLE enforced constants</span>
+<span class="dc">dcl-c</span> <span class="id">MAX_RECORDS</span> <span class="nm">999</span>;
+<span class="dc">dcl-c</span> <span class="id">TAX_RATE</span>    <span class="nm">0.18</span>;
+<span class="dc">dcl-c</span> <span class="id">APP_NAME</span>    <span class="st">'My App'</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="scope">Variable Scope</h2>
+                <p>RPGLE has two scopes:</p>
+                <ul>
+                    <li><strong>Global</strong> — declared outside any procedure, visible everywhere in the module</li>
+                    <li><strong>Local</strong> — declared inside a <code>dcl-proc</code>, visible only within that
+                        procedure</li>
+                </ul>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">ctl-opt</span> <span class="kw">dftactgrp</span>(<span class="sp">*no</span>) <span class="kw">main</span>(<span class="fn">main</span>);
+
+<span class="cm">// Global scope — visible everywhere</span>
+<span class="dc">dcl-s</span> <span class="id">g_appName</span> <span class="dt">char</span>(<span class="nm">30</span>) <span class="kw">inz</span>(<span class="st">'My App'</span>);
+
+<span class="dc">dcl-proc</span> <span class="fn">main</span>;
+  <span class="cm">// Local scope — only visible in main</span>
+  <span class="dc">dcl-s</span> <span class="id">counter</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">0</span>);
+  <span class="id">counter</span> += <span class="nm">1</span>;
+  <span class="fn">dsply</span> <span class="id">g_appName</span>;  <span class="cm">// OK - global variable</span>
+<span class="dc">end-proc</span>;
+
+<span class="dc">dcl-proc</span> <span class="fn">helper</span>;
+  <span class="cm">// counter is NOT visible here</span>
+  <span class="fn">dsply</span> <span class="id">g_appName</span>;  <span class="cm">// OK - global variable</span>
+<span class="dc">end-proc</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="like">The LIKE Keyword</h2>
+                <p>Create a variable with the same type as another variable. Similar to <code>type()</code> in Python
+                    but resolved at compile time.</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE</span><button class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">basePrice</span>  <span class="dt">packed</span>(<span class="nm">9</span>:<span class="nm">2</span>) <span class="kw">inz</span>(<span class="nm">10.00</span>);
+<span class="dc">dcl-s</span> <span class="id">salePrice</span>  <span class="kw">like</span>(<span class="id">basePrice</span>);
+
+<span class="id">salePrice</span> = <span class="id">basePrice</span> * <span class="nm">0.9</span>;
+<span class="fn">dsply</span> (<span class="st">'Sale Price: '</span> + <span class="bi">%char</span>(<span class="id">salePrice</span>));</pre>
+                    </div>
+                </div>
+
+                <h2 id="special-values">Special Values</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Value</th>
+                            <th>Meaning</th>
+                            <th>Python Equivalent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>*on</code></td>
+                            <td>True / Yes / '1'</td>
+                            <td><code>True</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*off</code></td>
+                            <td>False / No / '0'</td>
+                            <td><code>False</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*zeros</code></td>
+                            <td>All zeros</td>
+                            <td><code>0</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*blanks</code></td>
+                            <td>All spaces</td>
+                            <td><code>'' (empty)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*hival</code></td>
+                            <td>Highest possible value</td>
+                            <td><code>float('inf')</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*loval</code></td>
+                            <td>Lowest possible value</td>
+                            <td><code>float('-inf')</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*null</code></td>
+                            <td>Null pointer</td>
+                            <td><code>None</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>*inlr</code></td>
+                            <td>Last Record indicator</td>
+                            <td>N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Special Values Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="id">isActive</span> = <span class="sp">*on</span>;          <span class="cm">// Set to True</span>
+<span class="id host host">buffer</span> = <span class="sp host host host host">*blanks</span>;      <span class="cm host host host host host host">// Fill with spaces</span>
+<span class="id host host host host host host host host">counter</span> = <span class="sp host host host host host host host host host host">*zeros</span>;      <span class="cm host host host host host host host host host host host host host host">// Set to 0</span>
+<span class="id host host host host host host host host host host host host host host">maxVal</span> = <span class="sp host host host host host host host host host host host host host host host host">*hival</span>;        <span class="cm host host host host host host host host host host host host host host host host host host">// 9999... or Max Date</span>
+<span class="id host host host host host host host host host host host host host host host host host host host host">minVal</span> = <span class="sp host host host host host host host host host host host host host host host host host host host host host host">*loval</span>;        <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host">// 0000... or Min Date</span>
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="data-types.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Data Types</span></a>
+                    <a href="operators.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Operators</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

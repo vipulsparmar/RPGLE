@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RPGLE control structures: IF/ELSEIF/ELSE, SELECT/WHEN, DOW loops, DOU loops, FOR loops, ITER, LEAVE, and MONITOR error handling.">
+    <title>Control Structures — RPGLE Free Format Tutorial</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="40" rx="12" fill="url(#logo_grad)" />
+                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" fill="white"
+                            font-family="Outfit, sans-serif" font-weight="900" font-size="20">RPGLE</text>
+                        <defs>
+                            <linearGradient id="logo_grad" x1="0" y1="0" x2="100" y2="40"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#3b82f6" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="getting-started.html">Getting Started</a></li>
+                    <li><a href="data-types.html">Data Types</a></li>
+                    <li><a href="variables.html">Variables</a></li>
+                    <li><a href="operators.html">Operators</a></li>
+                    <li><a href="control-structures.html" class="active">Control Flow</a></li>
+                    <li><a href="procedures.html">Procedures</a></li>
+                    <li><a href="built-in-functions.html">BIFs</a></li>
+                    <li><a href="data-structures.html">Data Structures</a></li>
+                    <li><a href="file-operations.html">File I/O</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="page-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">On This Page</div>
+                    <ul class="sidebar-links">
+                        <li><a href="#if-else">IF / ELSEIF / ELSE</a></li>
+                        <li><a href="#select">SELECT / WHEN</a></li>
+                        <li><a href="#dow">DOW (Do While)</a></li>
+                        <li><a href="#dou">DOU (Do Until)</a></li>
+                        <li><a href="#for">FOR Loop</a></li>
+                        <li><a href="#iter-leave">ITER & LEAVE</a></li>
+                        <li><a href="#monitor">MONITOR (Try/Catch)</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <article class="content">
+                <div class="breadcrumb"><a href="../index.html">Home</a><span class="sep">›</span><span>Control
+                        Structures</span></div>
+                <h1>Control <span class="gradient-text">Structures</span></h1>
+                <p class="lead">Control structures in RPGLE work very similarly to Python's <code>if/elif/else</code>,
+                    <code>while</code>, and <code>for</code> — with slightly different syntax. RPGLE also has
+                    <code>SELECT/WHEN</code> (like switch/case) and <code>MONITOR</code> (like try/except).
+                </p>
+
+                <h2 id="if-else">IF / ELSEIF / ELSE</h2>
+                <p>The <code>if</code> statement is the most basic way to control code execution. Let's start with a
+                    simple check:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — IF Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="kw">if</span> <span class="id">userType</span> = <span class="st">'ADMIN'</span>;
+  <span class="fn">dsply</span> <span class="st">'Access Granted'</span>;
+<span class="kw host host">endif</span>;
+
+<span class="kw host host host host">if</span> <span class="id host host host host">balance</span> < <span class="nm host host host host">0</span>;
+  <span class="fn host host host host host host">dsply</span> <span class="st host host host host host host">'Overdrawn'</span>;
+<span class="kw host host host host host host host host">endif</span>;
+
+<span class="kw host host host host host host host host host host">if</span> <span class="id host host host host host host host host host host host host">isMember</span> <span class="kw host host host host host host host host host host host host host host">and</span> <span class="id host host host host host host host host host host host host host host host host">score</span> > <span class="nm host host host host host host host host host host host host host host host host host host">80</span>;
+  <span class="fn host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host">'VIP Bonus Applied'</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endif</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">if</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">status</span> = <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'PENDING'</span>;
+  <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'Waiting...'</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endif</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h3>Grading Example (Comparison)</h3>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">if</span> score >= <span class="nm">90</span>:
+    grade = <span class="st">'A'</span>
+<span class="kw">elif</span> score >= <span class="nm">80</span>:
+    grade = <span class="st">'B'</span>
+<span class="kw">elif</span> score >= <span class="nm">70</span>:
+    grade = <span class="st">'C'</span>
+<span class="kw">else</span>:
+    grade = <span class="st">'F'</span></pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE</span></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="dc">dcl-s</span> <span class="id">score</span> <span class="dt">int</span>(<span class="nm">10</span>) <span class="kw">inz</span>(<span class="nm">85</span>);
+<span class="dc">dcl-s</span> <span class="id">grade</span> <span class="dt">char</span>(<span class="nm">1</span>);
+
+<span class="kw">if</span> <span class="id">score</span> >= <span class="nm">90</span>;
+  <span class="id">grade</span> = <span class="st">'A'</span>;
+<span class="kw">elseif</span> <span class="id">score</span> >= <span class="nm">80</span>;
+  <span class="id">grade</span> = <span class="st">'B'</span>;
+<span class="kw">else</span>;
+  <span class="id">grade</span> = <span class="st">'F'</span>;
+<span class="kw">endif</span>;
+
+<span class="fn">dsply</span> (<span class="st">'Grade: '</span> + <span class="id">grade</span>);</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="box-title">✅ Key Differences from Python</div>
+                    <p>• Use <code>elseif</code> (one word) instead of <code>elif</code><br>• End with
+                        <code>endif;</code> instead of indentation<br>• Each clause ends with a semicolon
+                        (<code>;</code>)
+                    </p>
+                </div>
+
+                <h2 id="select">SELECT / WHEN / OTHER</h2>
+                <p>Like Python's <code>match/case</code> (3.10+) or a long if/elif chain. Perfect for multiple discrete
+                    checks:</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — SELECT Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// Payment processing gallery</span>
+<span class="kw">select</span>;
+  <span class="kw">when</span> <span class="id">pType</span> = <span class="st">'CC'</span>;
+    <span class="fn">dsply</span> <span class="st">'Credit Card'</span>;
+  <span class="kw">when</span> <span class="id host host">pType</span> = <span class="st host host">'DB'</span>;
+    <span class="fn host host host host">dsply</span> <span class="st host host host host host host">'Debit Card'</span>;
+  <span class="kw host host host host host host host host">when</span> <span class="id host host host host host host host host host host">pType</span> = <span class="st host host host host host host host host host host host host">'PP'</span>;
+    <span class="fn host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host">'PayPal'</span>;
+  <span class="kw host host host host host host host host host host host host host host host host host host host host">other</span>;
+    <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'Cash / Unknown'</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endsl</span>;
+
+<span class="cm">// Status codes gallery</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">select</span>;
+  <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">when</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">status</span> = <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">200</span>;
+    <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'OK'</span>;
+  <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">when</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">status</span> = <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">404</span>;
+    <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'Not Found'</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endsl</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+                <div class="info-box note">
+                    <div class="box-title">📝 Note</div>
+                    <p><code>other</code> is the default case (like Python's <code>else</code> or <code>case _:</code>).
+                        <code>endsl</code> ends the select block. No "fall-through" — only the first matching
+                        <code>when</code> executes.
+                    </p>
+                </div>
+
+                <h2 id="dow">DOW — Do While Loop</h2>
+                <p><code>dow</code> checks the condition <strong>before</strong> each iteration — exactly like Python's
+                    <code>while</code>:
+                </p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — DOW Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// Basic while loop</span>
+<span class="kw">dow</span> <span class="id">i</span> <= <span class="nm">5</span>;
+  <span class="id">i</span> += <span class="nm">1</span>;
+<span class="kw host host host host">enddo</span>;
+
+<span class="cm host host host host host host">// Reading file/list pattern</span>
+<span class="kw host host host host host host host host">dow</span> <span class="fn host host host host host host host host host host">hasMoreItems</span>();
+  <span class="id host host host host host host host host host host host host">item</span> = <span class="fn host host host host host host host host host host host host host host">getNextItem</span>();
+<span class="kw host host host host host host host host host host host host host host host host">enddo</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="dou">DOU — Do Until Loop</h2>
+                <p><code>dou</code> checks the condition <strong>after</strong> each iteration — the loop body always
+                    executes at least once. Python has no direct equivalent (you'd use <code>while True</code> with a
+                    <code>break</code>).
+                </p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — DOU Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="cm">// User input pattern</span>
+<span class="kw">dou</span> <span class="id">answer</span> = <span class="st host">'YES'</span> <span class="kw host host host host">or</span> <span class="id host host host host">answer</span> = <span class="st host host host host host host">'NO'</span>;
+  <span class="fn host host host host host host host host">dsply</span> <span class="st host host host host host host host host host host">'Please enter YES or NO'</span> <span class="st host host host host host host host host host host host host host host">''</span> <span class="id host host host host host host host host host host host host host host host host">answer</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host">enddo</span>;
+
+<span class="cm">// Retry pattern</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host">dou</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host">success</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">or</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">attempts</span> >= <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">3</span>;
+  <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">success</span> = <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">tryConnection</span>();
+  <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">attempts</span> += <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">1</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">enddo</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="info-box note">
+                    <div class="box-title">📝 DOW vs DOU</div>
+                    <p><strong>DOW</strong> = "Do <em>While</em> condition is true" (check first, like Python's
+                        <code>while</code>)<br><strong>DOU</strong> = "Do <em>Until</em> condition becomes true" (check
+                        after, loop runs at least once)
+                    </p>
+                </div>
+
+                <h2 id="for">FOR Loop</h2>
+                <p>The <code>for</code> loop in RPGLE is like Python's <code>for i in range()</code>:</p>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="cm"># Count 1 to 10</span>
+<span class="kw">for</span> <span class="id">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">11</span>):
+    <span class="fn">print</span>(<span class="id">i</span>)
+
+<span class="cm"># Step by 2</span>
+<span class="kw">for</span> <span class="id">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">20</span>, <span class="nm">2</span>):
+    <span class="fn">print</span>(<span class="id">i</span>)
+
+<span class="cm"># Count down</span>
+<span class="kw">for</span> <span class="id">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>, <span class="nm">0</span>, -<span class="nm">1</span>):
+    <span class="fn">print</span>(<span class="id">i</span>)</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE — FOR Gallery</span><button
+                                class="copy-btn">📋
+                                Copy</button></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="cm">// Basic Range</span>
+<span class="kw">for</span> <span class="id">i</span> = <span class="nm">1</span> <span class="kw host host">to</span> <span class="nm host host">100</span>;
+  <span class="cm">// block</span>
+<span class="kw host host host host">endfor</span>;
+
+<span class="cm">// Custom Step (by 2)</span>
+<span class="kw host host host host host host">for</span> <span class="id host host host host host host">x</span> = <span class="nm host host host host host host">0</span> <span class="kw host host host host host host host host">to</span> <span class="nm host host host host host host host host host host">50</span> <span class="kw host host host host host host host host host host host host">by</span> <span class="nm host host host host host host host host host host host host host host">2</span>;
+  <span class="cm host host host host host host host host host host host host host host host host">// block</span>
+<span class="kw host host host host host host host host host host host host host host host host host host">endfor</span>;
+
+<span class="cm">// Downwards</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host">for</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host">i</span> = <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host">10</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host">downTo</span> <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host">1</span>;
+  <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">// block</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endfor</span>;
+
+<span class="cm">// Array processing pattern</span>
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">for</span> <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">idx</span> = <span class="nm host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">1</span> <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">to</span> <span class="bi host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">%elem</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host_host host_host host_host host_host host_host host_host host_host host_host host_host">arr</span>);
+  <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">total</span> += <span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">arr</span>(<span class="id host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">idx</span>);
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endfor</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="iter-leave">ITER & LEAVE</h2>
+                <p><code>iter</code> = Python's <code>continue</code> (skip to next iteration). <code>leave</code> =
+                    Python's <code>break</code> (exit the loop).</p>
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — ITER & LEAVE Gallery</span><button
+                            class="copy-btn">📋
+                            Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="dc">**free</span>
+<span class="kw">for</span> <span class="id">i</span> = <span class="nm">1</span> <span class="kw host host">to</span> <span class="nm host host">10</span>;
+  <span class="kw host host host host">if</span> (<span class="id host host host host host host">status</span> = <span class="st host host host host host host host host">'SKIP'</span>);
+    <span class="kw host host host host host host host host host host">iter</span>;    <span class="cm host host host host host host host host host host host host">// Continue to next</span>
+  <span class="kw host host host host host host host host host host host host host host">endif</span>;
+  
+  <span class="kw host host host host host host host host host host host host host host host host">if</span> (<span class="id host host host host host host host host host host host host host host host host host host">errorCount</span> > <span class="nm host host host host host host host host host host host host host host host host host host host host">5</span>);
+    <span class="kw host host host host host host host host host host host host host host host host host host host host host host">leave</span>;   <span class="cm host host host host host host host host host host host host host host host host host host host host host host host host">// Break loop</span>
+  <span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host">endif</span>;
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endfor</span>;
+
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">return</span>;</pre>
+                    </div>
+                </div>
+
+                <h2 id="monitor">MONITOR — Error Handling (Try/Catch)</h2>
+                <p><code>monitor</code> is RPGLE's equivalent of Python's <code>try/except</code>:</p>
+                <div class="comparison-wrapper fade-in">
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">Python</span></div>
+                        <div class="code-content">
+                            <pre><span class="kw">try</span>:
+    result = <span class="nm">100</span> / <span class="nm">0</span>
+<span class="kw">except</span> ZeroDivisionError:
+    result = <span class="nm">0</span>
+    <span class="fn">print</span>(<span class="st">'Division by zero!'</span>)</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header"><span class="code-lang">RPGLE — MONITOR Gallery</span><button
+                                class="copy-btn">📋
+                                Copy</button></div>
+                        <div class="code-content">
+                            <pre><span class="dc">**free</span>
+<span class="kw">monitor</span>;
+  <span class="id">result</span> = <span class="nm">100</span> / <span class="id">divisor</span>;
+<span class="kw host host">on-error</span> <span class="nm host host">00102</span>; <span class="cm host host">// Divide by zero</span>
+  <span class="id host host host host">result</span> = <span class="nm host host host host">0</span>;
+<span class="kw host host host host host host">endmon</span>;
+
+<span class="kw host host host host host host host host">monitor</span>;
+  <span class="id host host host host host host host host host host">status</span> = <span class="fn host host host host host host host host host host host host">processTransaction</span>();
+<span class="kw host host host host host host host host host host host host host host">on-error</span> <span class="sp host host host host host host host host host host host host host host host host host host host host">*all</span>;
+  <span class="fn host host host host host host host host host host host host host host host host host host host host host host host host">logError</span>(<span class="st host host host host host host host host host host host host host host host host host host host host host host host host host host host host">'Critical error in process'</span>);
+<span class="kw host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host host">endmon</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Common Error Codes</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Error Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>00100</code></td>
+                            <td>String/array errors</td>
+                        </tr>
+                        <tr>
+                            <td><code>00102</code></td>
+                            <td>Divide by zero</td>
+                        </tr>
+                        <tr>
+                            <td><code>00121</code></td>
+                            <td>Array index out of bounds</td>
+                        </tr>
+                        <tr>
+                            <td><code>00202</code></td>
+                            <td>Call to program failed</td>
+                        </tr>
+                        <tr>
+                            <td><code>00211</code></td>
+                            <td>Conversion error</td>
+                        </tr>
+                        <tr>
+                            <td><code>*all</code></td>
+                            <td>Catch all errors</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">RPGLE — Multiple on-error</span><button
+                            class="copy-btn">📋 Copy</button></div>
+                    <div class="code-content">
+                        <pre><span class="kw">monitor</span>;
+  <span class="cm">// risky code here</span>
+  <span class="id">value</span> = <span class="bi">%dec</span>(<span class="id">inputStr</span>:<span class="nm">9</span>:<span class="nm">2</span>);
+  <span class="id">result</span> = <span class="id">value</span> / <span class="id">divisor</span>;
+
+<span class="kw">on-error</span> <span class="nm">00211</span>;
+  <span class="fn">dsply</span> <span class="st">'Invalid number format'</span>;
+
+<span class="kw">on-error</span> <span class="nm">00102</span>;
+  <span class="fn">dsply</span> <span class="st">'Cannot divide by zero'</span>;
+
+<span class="kw">on-error</span>;  <span class="cm">// Catch everything else</span>
+  <span class="fn">dsply</span> <span class="st">'Unexpected error'</span>;
+<span class="kw">endmon</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="chapter-nav">
+                    <a href="operators.html" class="chapter-link prev"><span class="label">← Previous</span><span
+                            class="title">Operators</span></a>
+                    <a href="procedures.html" class="chapter-link next"><span class="label">Next →</span><span
+                            class="title">Procedures</span></a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>RPGLE Free Format Tutorial — Modern RPG programming on IBM i</p>
+        </div>
+    </footer>
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
